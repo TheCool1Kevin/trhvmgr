@@ -64,8 +64,8 @@ namespace trhvmgr
             renderer.LinePen.DashStyle = DashStyle.Dot;
             renderer.IsShowGlyphs = true;
             renderer.UseTriangles = true;
-            TreeListView.TreeRenderer.PIXELS_PER_LEVEL = 13;
-            //renderer.CellPadding = new Rectangle(0, 0, 2, 2);
+            //TreeListView.TreeRenderer.PIXELS_PER_LEVEL = 13;
+            renderer.CellPadding = new Rectangle(0, 2, 0, 0);
             renderer.IsShowLines = false;
             this.treeListView.Refresh();
         }
@@ -108,17 +108,39 @@ namespace trhvmgr
             RefreshCollections();
         }
 
+        private void treeListView_ItemActivate(object sender, EventArgs e)
+        {
+            object model = this.treeListView.SelectedObject;
+            if (model != null)
+                this.treeListView.ToggleExpansion(model);
+        }
+
+        private void tabControl_Selected(object sender, TabControlEventArgs e)
+        {
+            if (e.TabPageIndex == 1)
+                MessageBox.Show("Unstable feature!", "", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+        }
+
+        #endregion
+
+        #region UI Button Events
+
         private void addServerToolButton_Click(object sender, EventArgs e)
         {
             new AddServerDialog().ShowDialog();
             treeListView.SetObjects(databaseManager.TreeNodes);
         }
 
-        private void treeListView_ItemActivate(object sender, EventArgs e)
+        private void addTemplateToolButton_Click(object sender, EventArgs e)
         {
-            object model = this.treeListView.SelectedObject;
-            if (model != null)
-                this.treeListView.ToggleExpansion(model);
+            new AddTemplateDialog().ShowDialog();
+            treeListView.SetObjects(databaseManager.TreeNodes);
+        }
+
+        private void addVhdToolButton_Click(object sender, EventArgs e)
+        {
+            new AddTemplateDialog().ShowDialog();
+            treeListView.SetObjects(databaseManager.TreeNodes);
         }
 
         #endregion
@@ -268,11 +290,5 @@ namespace trhvmgr
         }
 
         #endregion
-
-        private void tabControl_Selected(object sender, TabControlEventArgs e)
-        {
-            if (e.TabPageIndex == 1)
-                MessageBox.Show("Unstable feature!");
-        }
     }
 }

@@ -8,27 +8,57 @@ namespace trhvmgr.UI
     /// <summary>
     /// Textbox with a colored border.
     /// </summary>
-    public class ColorTextBox : TextBox
+    public class ColorTextBox : Panel
     {
+        private TextBox textBox;
+        private bool focusedAlways = false;
+
         /// <summary>
         /// Color of border.
         /// </summary>
         public Color BorderColor { get; set; }
 
-        [DllImport("user32")]
-        private static extern IntPtr GetWindowDC(IntPtr hwnd);
-        private const int WM_NCPAINT = 0x85;
-        protected override void WndProc(ref Message m)
+        public string Text
         {
-            base.WndProc(ref m);
-            if (m.Msg == WM_NCPAINT)
+            get { return textBox.Text; }
+            set { textBox.Text = value; }
+        }
+
+        public TextBox TextBox
+        {
+            get { return textBox; }
+            set { textBox = value; }
+        }
+
+        public ColorTextBox()
+        {
+            this.DoubleBuffered = true;
+            this.Padding = new Padding(2);
+
+            this.TextBox = new TextBox();
+            this.TextBox.AutoSize = false;
+            this.TextBox.BorderStyle = BorderStyle.None;
+            this.TextBox.Dock = DockStyle.Fill;
+            this.TextBox.Enter += new EventHandler(this.TextBox_Refresh);
+            this.TextBox.Leave += new EventHandler(this.TextBox_Refresh);
+            this.TextBox.Resize += new EventHandler(this.TextBox_Refresh);
+            this.Controls.Add(this.TextBox);
+        }
+
+        private void TextBox_Refresh(object sender, EventArgs e)
+        {
+            this.Invalidate();
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            e.Graphics.Clear(SystemColors.Window);
+            using (Pen borderPen = new Pen(BorderColor))
             {
-                var dc = GetWindowDC(Handle);
-                using (Graphics g = Graphics.FromHdc(dc))
-                {
-                    g.DrawRectangle(new Pen(BorderColor), 0, 0, Width - 1, Height - 1);
-                }
+                e.Graphics.DrawRectangle(borderPen,
+                    new Rectangle(0, 0, this.ClientSize.Width - 1, this.ClientSize.Height - 1));
             }
+            base.OnPaint(e);
         }
     }
 }

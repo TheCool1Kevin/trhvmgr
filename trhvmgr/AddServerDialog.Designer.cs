@@ -105,7 +105,7 @@
             this.macText.ButtonTooltipTitle = "Autofill MAC Address";
             this.macText.ButtonVisible = true;
             this.macText.ErrorImage = ((System.Drawing.Image)(resources.GetObject("macText.ErrorImage")));
-            this.macText.ErrorTooltip = "Unable to get MAC address. Is machine turned on?";
+            this.macText.ErrorTooltip = "Unable to get MAC address.\nIs machine turned on?";
             this.macText.ErrorTooltipTitle = "Network Error";
             this.macText.IsValid = trhvmgr.Lib.tribool.NEUTRAL;
             this.macText.LabelAutoSize = false;
@@ -125,7 +125,7 @@
             this.ipText.ButtonTooltipTitle = "Autofill IP Address";
             this.ipText.ButtonVisible = true;
             this.ipText.ErrorImage = ((System.Drawing.Image)(resources.GetObject("ipText.ErrorImage")));
-            this.ipText.ErrorTooltip = "Unable to get IP address. Is machine turned on?";
+            this.ipText.ErrorTooltip = "Unable to get IP address.\nIs machine turned on?";
             this.ipText.ErrorTooltipTitle = "Network Error";
             this.ipText.IsValid = trhvmgr.Lib.tribool.NEUTRAL;
             this.ipText.LabelAutoSize = false;
@@ -145,7 +145,7 @@
             this.hostnameText.ButtonTooltipTitle = "";
             this.hostnameText.ButtonVisible = false;
             this.hostnameText.ErrorImage = ((System.Drawing.Image)(resources.GetObject("hostnameText.ErrorImage")));
-            this.hostnameText.ErrorTooltip = "Check your spelling. Unable to find machine. Is machine turned on?";
+            this.hostnameText.ErrorTooltip = "Check your spelling. Unable to find machine.\nIs machine turned on?";
             this.hostnameText.ErrorTooltipTitle = "Network Error";
             this.hostnameText.IsValid = trhvmgr.Lib.tribool.NEUTRAL;
             this.hostnameText.LabelAutoSize = false;

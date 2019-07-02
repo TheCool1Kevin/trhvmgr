@@ -94,6 +94,12 @@
     <Compile Include="AddTemplateDialog.Designer.cs">
       <DependentUpon>AddTemplateDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="AddVhdDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddVhdDialog.Designer.cs">
+      <DependentUpon>AddVhdDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Database\DatabaseManager.cs" />
     <Compile Include="Database\LiteDataRow.cs" />
     <Compile Include="Database\LiteDataTable.cs">
@@ -129,8 +135,17 @@
     <Compile Include="UI\BackgroundWorkerQueueDialog.Designer.cs">
       <DependentUpon>BackgroundWorkerQueueDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\ColorComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UI\ColorTextBox.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\ValidatingComboBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\ValidatingComboBox.Designer.cs">
+      <DependentUpon>ValidatingComboBox.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\ValidatingTextbox.cs">
       <SubType>UserControl</SubType>
@@ -140,6 +155,12 @@
     </Compile>
     <EmbeddedResource Include="AddServerDialog.resx">
       <DependentUpon>AddServerDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddTemplateDialog.resx">
+      <DependentUpon>AddTemplateDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddVhdDialog.resx">
+      <DependentUpon>AddVhdDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainFrm.resx">
       <DependentUpon>MainFrm.cs</DependentUpon>
@@ -159,6 +180,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\BackgroundWorkerQueueDialog.resx">
       <DependentUpon>BackgroundWorkerQueueDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ValidatingComboBox.resx">
+      <DependentUpon>ValidatingComboBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\ValidatingTextbox.resx">
       <DependentUpon>ValidatingTextbox.cs</DependentUpon>

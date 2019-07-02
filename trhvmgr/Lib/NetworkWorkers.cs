@@ -65,6 +65,8 @@ namespace trhvmgr.Lib
                 string mac = ArpRequest.Send(ip).Address.ToString();
                 // Normalize address
                 mac = Regex.Replace(mac, @"[^0-9A-Fa-f]", "");
+                mac = Regex.Replace(mac, ".{2}", "$0:");
+                mac = mac.TrimEnd(':');
                 ((NetworkWorkerObject)ctx.o).MacAddress = mac;
                 ctx.s = (int)StatusCode.OK;
                 return ctx;
