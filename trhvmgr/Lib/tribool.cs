@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace trhvmgr.Lib
 {
+    // Tristate type
     public enum tribool
     {
         TRUE = 1,

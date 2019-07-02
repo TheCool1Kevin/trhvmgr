@@ -1,10 +1,12 @@
-﻿using LiteDB;
+﻿using BrightIdeasSoftware;
+using LiteDB;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -26,9 +28,8 @@ namespace trhvmgr
             InitializeComponent();
             this.mainMenu.Renderer = new MainFormMenuStripRenderer();
             this.mainToolstrip.Renderer = new MainFormToolStripRenderer();
-
-            // Database Initialization
-            databaseManager = new DatabaseManager();
+            // Database
+            databaseManager = SessionManager.Instance.Database;
             RefreshCollections();
         }
 
@@ -36,17 +37,37 @@ namespace trhvmgr
 
         private void SetupMasterTree()
         {
-            this.treeListView.CanExpandGetter = delegate (object x)
+            this.treeListView.CanExpandGetter = (x) =>
             {
                 return ((MasterTreeNode)x).Children.Count > 0;
             };
 
-            this.treeListView.ChildrenGetter = delegate (object x)
+            this.treeListView.ChildrenGetter = (x) =>
             {
-                return ((MasterTreeNode) x).Children;
+                return ((MasterTreeNode)x).Children;
+            };
+
+            this.olvColumn1.ImageGetter = (x) =>
+            {
+                if (((MasterTreeNode)x).Type == NodeType.HostComputer)
+                    return imageList1.Images[1];
+                else if (((MasterTreeNode)x).Type == NodeType.VirtualMachines)
+                    return imageList1.Images[2];
+                return imageList1.Images[0];
             };
 
             this.treeListView.Roots = databaseManager.TreeNodes;
+
+            // TODO: High DPI Awareness
+            TreeListView.TreeRenderer renderer = this.treeListView.TreeColumnRenderer;
+            renderer.LinePen = new Pen(Color.Firebrick, 0.5f);
+            renderer.LinePen.DashStyle = DashStyle.Dot;
+            renderer.IsShowGlyphs = true;
+            renderer.UseTriangles = true;
+            TreeListView.TreeRenderer.PIXELS_PER_LEVEL = 13;
+            //renderer.CellPadding = new Rectangle(0, 0, 2, 2);
+            renderer.IsShowLines = false;
+            this.treeListView.Refresh();
         }
 
         #endregion
@@ -55,7 +76,7 @@ namespace trhvmgr
 
         private void MainFrm_Load(object sender, EventArgs e)
         {
-
+            SetupMasterTree();
         }
 
         private void collectionsList_SelectedIndexChanged(object sender, EventArgs e)
@@ -84,11 +105,25 @@ namespace trhvmgr
 
         private void dataGridView_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)
         {
+            RefreshCollections();
+        }
 
+        private void addServerToolButton_Click(object sender, EventArgs e)
+        {
+            new AddServerDialog().ShowDialog();
+            treeListView.SetObjects(databaseManager.TreeNodes);
+        }
+
+        private void treeListView_ItemActivate(object sender, EventArgs e)
+        {
+            object model = this.treeListView.SelectedObject;
+            if (model != null)
+                this.treeListView.ToggleExpansion(model);
         }
 
         #endregion
 
+        // TODO: Database really broken :/
         #region Database Code
 
         // Modified from falahati/LiteDBViewer
@@ -153,24 +188,53 @@ namespace trhvmgr
             ds.RowChanging += Ds_RowChanging;
             ds.ColumnChanging += Ds_ColumnChanging;
             ds.RowDeleting += Ds_RowDeleting;
+            ds.TableNewRow += Ds_TableNewRow;
             dataGridView.DataSource = ds;
+        }
+
+        private void Ds_TableNewRow(object sender, DataTableNewRowEventArgs e)
+        {
+            RefreshCollections();
         }
 
         private void Ds_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
-            databaseManager.GetCollection(collectionsList.SelectedItem.ToString()).Delete(((LiteDataRow)e.Row).UnderlyingValue["_id"].AsObjectId);
+            RefreshCollections();
         }
 
         private void Ds_ColumnChanging(object sender, DataColumnChangeEventArgs e)
         {
             BsonDocument doc = ((LiteDataRow)e.Row).UnderlyingValue;
-            doc[e.Column.ColumnName] = new BsonValue(e.ProposedValue);
-            databaseManager.GetCollection(collectionsList.SelectedItem.ToString()).Update(doc);
+            if (doc == null) return;
+            if (e.Column.ColumnName == "_id")
+            {
+                databaseManager.GetCollection(collectionsList.SelectedItem.ToString()).Delete(doc["_id"]);
+                doc[e.Column.ColumnName] = new BsonValue(e.ProposedValue);
+                databaseManager.GetCollection(collectionsList.SelectedItem.ToString()).Insert(doc);
+            }
+            else
+            {
+                doc[e.Column.ColumnName] = new BsonValue(e.ProposedValue);
+                databaseManager.GetCollection(collectionsList.SelectedItem.ToString()).Update(doc);
+            }
+            RefreshCollections();
         }
 
         private void Ds_RowChanging(object sender, DataRowChangeEventArgs e)
         {
-            
+            if(e.Action == DataRowAction.Add)
+            {
+                BsonDocument doc = new BsonDocument();
+                for (int i = 0; i < e.Row.Table.Columns.Count; i++)
+                    doc[e.Row.Table.Columns[i].ColumnName] = "";
+                if(collectionsList.SelectedItem != null)
+                    databaseManager.GetCollection(collectionsList.SelectedItem.ToString()).Insert(doc);
+            }
+            else if(e.Action == DataRowAction.Delete)
+            {
+                databaseManager.GetCollection(collectionsList.SelectedItem.ToString()).Delete(((LiteDataRow)e.Row).UnderlyingValue["_id"]);
+            }
+            RefreshCollections();
         }
 
         private void RefreshCollections()
@@ -178,6 +242,7 @@ namespace trhvmgr
             databaseManager.RegenerateTree();
             collectionsList.Items.Clear();
             databaseManager.GetCollectionNames().ToList().ForEach(x => collectionsList.Items.Add(x));
+            treeListView.SetObjects(databaseManager.TreeNodes);
         }
 
         private void RunQuery(string query)
@@ -199,13 +264,15 @@ namespace trhvmgr
             {
                 MessageBox.Show(ex.Message, @"Bad Query", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            RefreshCollections();
         }
 
         #endregion
 
-        private void addServerToolButton_Click(object sender, EventArgs e)
+        private void tabControl_Selected(object sender, TabControlEventArgs e)
         {
-            new AddServerDialog().ShowDialog();
+            if (e.TabPageIndex == 1)
+                MessageBox.Show("Unstable feature!");
         }
     }
 }

@@ -14,6 +14,10 @@ namespace trhvmgr
         [STAThread]
         static void Main()
         {
+            // Initialize session
+            SessionManager.Instance.InitializeDatabase();
+
+            // Initialize application
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainFrm());

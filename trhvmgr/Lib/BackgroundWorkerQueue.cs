@@ -75,7 +75,7 @@ namespace trhvmgr.Lib
         /// </summary>
         /// <param name="status">Status code from the previous task. Use non-standard
         /// status codes at your own risk.</param>
-        /// <param name="obj">Object passed down from previous task.</param>
+        /// <param name="obj">Object passed down from previous task; must be ICloneable.</param>
         /// <param name="del">WorkerDelegate passed down by BackgroundWorkerQueue.</param>
         public WorkerContext(int status, ICloneable obj, WorkerDelegate del)
         {
@@ -105,6 +105,19 @@ namespace trhvmgr.Lib
         private BackgroundWorker _w;
         private int _i = 0;
 
+        private void _w_DoWork(object sender, DoWorkEventArgs e)
+        {
+            WorkerContext res = new WorkerContext((int)StatusCode.OK, null, new WorkerDelegate(_w));
+            for (_i = 0; _i < _ntasks; _i++)
+            {
+                _w.ReportProgress(0);
+                res = _tasks[_i].Invoke(res);
+                ReturnedObjects.Add((WorkerContext)res.Clone());
+                _w.ReportProgress(100);
+                Thread.Sleep(500); // 0.5s sleep
+            }
+        }
+
         /// <summary>
         /// Returned objects from each task.
         /// </summary>
@@ -121,17 +134,16 @@ namespace trhvmgr.Lib
             ReturnedObjects = new List<WorkerContext>();
         }
 
-        private void _w_DoWork(object sender, DoWorkEventArgs e)
+        /// <summary>
+        /// Adds a new task to the end of the worker queue.
+        /// </summary>
+        /// <param name="description">Text to display (if any).</param>
+        /// <param name="f">Worker function to run, taking in a WorkerContext and returning a WorkerContext</param>
+        public void AppendTask(string description, Func<WorkerContext, WorkerContext> f)
         {
-            WorkerContext res = new WorkerContext((int)StatusCode.OK, null, new WorkerDelegate(_w));
-            for (_i = 0; _i < _ntasks; _i++)
-            {
-                _w.ReportProgress(0);
-                res = _tasks[_i].Invoke(res);
-                ReturnedObjects.Add((WorkerContext) res.Clone());
-                _w.ReportProgress(100);
-                Thread.Sleep(500); // 0.5s sleep
-            }
+            _tasks.Add(f);
+            _texts.Add(description);
+            _ntasks++;
         }
 
         public string GetStatusText()
@@ -149,13 +161,6 @@ namespace trhvmgr.Lib
         public int GetTaskCount()
         {
             return _ntasks;
-        }
-
-        public void AppendTask(string description, Func<WorkerContext, WorkerContext> f)
-        {
-            _tasks.Add(f);
-            _texts.Add(description);
-            _ntasks++;
         }
     }
 }

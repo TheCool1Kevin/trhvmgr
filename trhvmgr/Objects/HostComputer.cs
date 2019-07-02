@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LiteDB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,15 @@ namespace trhvmgr.Objects
     public class HostComputer
     {
         public string HostName { get; set; }
-        public List<Guid> VMs; // UUID of all virtual machines
+        public string MacAddress { get; set; }
+        public string IpAddress { get; set; }
+        public List<Guid> VirtualMachines = new List<Guid>();
+        public List<string> VirtualHardDisks = new List<string>();
+    }
+
+    public class DbHostComputer
+    {
+        [BsonId]
+        public string HostName { get; set; }
     }
 }

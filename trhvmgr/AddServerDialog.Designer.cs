@@ -31,15 +31,15 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddServerDialog));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
-            this.cancelbtn = new System.Windows.Forms.Button();
-            this.addbtn = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.macText = new trhvmgr.UI.ValidatingTextbox();
             this.ipText = new trhvmgr.UI.ValidatingTextbox();
             this.hostnameText = new trhvmgr.UI.ValidatingTextbox();
+            this.cancelbtn = new System.Windows.Forms.Button();
+            this.addbtn = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,10 +57,24 @@
             this.groupBox1.Location = new System.Drawing.Point(10, 10);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(10);
-            this.groupBox1.Size = new System.Drawing.Size(385, 370);
-            this.groupBox1.TabIndex = 0;
+            this.groupBox1.Size = new System.Drawing.Size(404, 370);
+            this.groupBox1.TabIndex = 100;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Server Properties";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.checkBox1.Location = new System.Drawing.Point(13, 333);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(198, 21);
+            this.checkBox1.TabIndex = 3;
+            this.checkBox1.Text = "Don\'t overwrite information";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.MouseLeave += new System.EventHandler(this.checkBox1_MouseLeave);
+            this.checkBox1.MouseHover += new System.EventHandler(this.checkBox1_MouseHover);
             // 
             // label1
             // 
@@ -68,63 +82,24 @@
             this.label1.Location = new System.Drawing.Point(13, 122);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(177, 17);
-            this.label1.TabIndex = 6;
+            this.label1.TabIndex = 100;
             this.label1.Text = "Detected Virtual Machines:";
             // 
             // listBox1
             // 
+            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 16;
             this.listBox1.Location = new System.Drawing.Point(13, 144);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(362, 164);
-            this.listBox1.TabIndex = 5;
-            // 
-            // cancelbtn
-            // 
-            this.cancelbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelbtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelbtn.Location = new System.Drawing.Point(297, 327);
-            this.cancelbtn.Name = "cancelbtn";
-            this.cancelbtn.Padding = new System.Windows.Forms.Padding(3);
-            this.cancelbtn.Size = new System.Drawing.Size(75, 30);
-            this.cancelbtn.TabIndex = 1;
-            this.cancelbtn.Text = "Cancel";
-            this.cancelbtn.UseVisualStyleBackColor = true;
-            // 
-            // addbtn
-            // 
-            this.addbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addbtn.Location = new System.Drawing.Point(216, 327);
-            this.addbtn.Name = "addbtn";
-            this.addbtn.Padding = new System.Windows.Forms.Padding(3);
-            this.addbtn.Size = new System.Drawing.Size(75, 30);
-            this.addbtn.TabIndex = 0;
-            this.addbtn.Text = "Add";
-            this.addbtn.UseVisualStyleBackColor = true;
-            this.addbtn.Click += new System.EventHandler(this.addbtn_Click);
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.checkBox1.Enabled = false;
-            this.checkBox1.Location = new System.Drawing.Point(13, 333);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(175, 21);
-            this.checkBox1.TabIndex = 7;
-            this.checkBox1.Text = "Don\'t verify information";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.MouseLeave += new System.EventHandler(this.checkBox1_MouseLeave);
-            this.checkBox1.MouseHover += new System.EventHandler(this.checkBox1_MouseHover);
-            // 
-            // toolTip1
-            // 
-            this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Warning;
-            this.toolTip1.ToolTipTitle = "Surpress validation";
+            this.listBox1.Size = new System.Drawing.Size(378, 164);
+            this.listBox1.TabIndex = 100;
             // 
             // macText
             // 
+            this.macText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.macText.ButtonImage = ((System.Drawing.Image)(resources.GetObject("macText.ButtonImage")));
             this.macText.ButtonTooltip = "Automatically get MAC address given server host name.";
             this.macText.ButtonTooltipTitle = "Autofill MAC Address";
@@ -138,11 +113,13 @@
             this.macText.LabelWidth = 95;
             this.macText.Location = new System.Drawing.Point(13, 84);
             this.macText.Name = "macText";
-            this.macText.Size = new System.Drawing.Size(362, 22);
-            this.macText.TabIndex = 4;
+            this.macText.Size = new System.Drawing.Size(378, 22);
+            this.macText.TabIndex = 2;
             // 
             // ipText
             // 
+            this.ipText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ipText.ButtonImage = ((System.Drawing.Image)(resources.GetObject("ipText.ButtonImage")));
             this.ipText.ButtonTooltip = "Automatically get IP address given server host name.";
             this.ipText.ButtonTooltipTitle = "Autofill IP Address";
@@ -156,11 +133,13 @@
             this.ipText.LabelWidth = 95;
             this.ipText.Location = new System.Drawing.Point(13, 56);
             this.ipText.Name = "ipText";
-            this.ipText.Size = new System.Drawing.Size(362, 22);
-            this.ipText.TabIndex = 3;
+            this.ipText.Size = new System.Drawing.Size(378, 22);
+            this.ipText.TabIndex = 1;
             // 
             // hostnameText
             // 
+            this.hostnameText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.hostnameText.ButtonImage = ((System.Drawing.Image)(resources.GetObject("hostnameText.ButtonImage")));
             this.hostnameText.ButtonTooltip = null;
             this.hostnameText.ButtonTooltipTitle = "";
@@ -174,8 +153,37 @@
             this.hostnameText.LabelWidth = 95;
             this.hostnameText.Location = new System.Drawing.Point(13, 28);
             this.hostnameText.Name = "hostnameText";
-            this.hostnameText.Size = new System.Drawing.Size(362, 22);
-            this.hostnameText.TabIndex = 2;
+            this.hostnameText.Size = new System.Drawing.Size(378, 22);
+            this.hostnameText.TabIndex = 0;
+            // 
+            // cancelbtn
+            // 
+            this.cancelbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cancelbtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cancelbtn.Location = new System.Drawing.Point(316, 327);
+            this.cancelbtn.Name = "cancelbtn";
+            this.cancelbtn.Padding = new System.Windows.Forms.Padding(3);
+            this.cancelbtn.Size = new System.Drawing.Size(75, 30);
+            this.cancelbtn.TabIndex = 5;
+            this.cancelbtn.Text = "Cancel";
+            this.cancelbtn.UseVisualStyleBackColor = true;
+            // 
+            // addbtn
+            // 
+            this.addbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.addbtn.Location = new System.Drawing.Point(235, 327);
+            this.addbtn.Name = "addbtn";
+            this.addbtn.Padding = new System.Windows.Forms.Padding(3);
+            this.addbtn.Size = new System.Drawing.Size(75, 30);
+            this.addbtn.TabIndex = 4;
+            this.addbtn.Text = "Add";
+            this.addbtn.UseVisualStyleBackColor = true;
+            this.addbtn.Click += new System.EventHandler(this.addbtn_Click);
+            // 
+            // toolTip1
+            // 
+            this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Warning;
+            this.toolTip1.ToolTipTitle = "Surpress validation";
             // 
             // AddServerDialog
             // 
@@ -183,7 +191,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancelbtn;
-            this.ClientSize = new System.Drawing.Size(405, 390);
+            this.ClientSize = new System.Drawing.Size(424, 390);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "AddServerDialog";

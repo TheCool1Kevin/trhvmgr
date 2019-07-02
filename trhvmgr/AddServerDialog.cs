@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using trhvmgr.Lib;
+using trhvmgr.Objects;
 using trhvmgr.UI;
 
 namespace trhvmgr
@@ -28,6 +29,7 @@ namespace trhvmgr
 
         private void ValidateTexts()
         {
+            // A clean alternative way to run consecutive network events
             BackgroundWorkerQueueDialog backgroundWorker = new BackgroundWorkerQueueDialog("Retrieving Network Information");
             backgroundWorker.AppendTask("Starting...", NetworkWorkers.GetStarterWorker(new NetworkWorkerObject
             {
@@ -64,10 +66,10 @@ namespace trhvmgr
         private void addbtn_Click(object sender, EventArgs e)
         {
             ValidateTexts();
-            if(hostnameText.IsValid == tribool.TRUE && ipText.IsValid == tribool.TRUE && macText.IsValid == tribool.TRUE)
+            if(hostnameText.IsValid == tribool.TRUE && ipText.IsValid == tribool.TRUE /*&& macText.IsValid == tribool.TRUE*/)
             {
                 this.DialogResult = DialogResult.OK;
-
+                SessionManager.Instance.Database.AddServer(new DbHostComputer { HostName = hostnameText.Text });
             }
             else
                 this.DialogResult = DialogResult.None;

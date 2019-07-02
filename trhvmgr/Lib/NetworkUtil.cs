@@ -1,32 +1,34 @@
 ﻿using System.Linq;
+using System.Net;
 using System.Net.NetworkInformation;
 
 namespace trhvmgr.Lib
 {
+    /// <summary>
+    /// Utility class for network related methods.
+    /// </summary>
     public class NetworkUtil
     {
-        public static string GetMacByIP(string ipAddress)
+        /// <summary>
+        /// Sends a ping packet/multiple ping packets. Returns success/last status.
+        /// </summary>
+        /// <param name="ip">IP Address to send ping to.</param>
+        /// <param name="tries">Number of tries before giving up.</param>
+        /// <param name="timeout">Timeout of each response.</param>
+        /// <returns>
+        /// If server replied with success within the number of tries specified, return success.
+        /// Otherwise, we return the very last status received.
+        /// </returns>
+        public static IPStatus SendPing(IPAddress ip, int tries = 1, int timeout = 1000 /* 1 second */)
         {
-            // Grab all online interfaces
-            var query = NetworkInterface.GetAllNetworkInterfaces()
-                .Where(n =>
-                    n.OperationalStatus == OperationalStatus.Up && // Only grabbing what's online
-                    n.NetworkInterfaceType != NetworkInterfaceType.Loopback)
-                .Select(_ => new
-                {
-                    PhysicalAddress = _.GetPhysicalAddress(),
-                    IPProperties = _.GetIPProperties(),
-                });
-
-            // Grab the first interface that has a unicast address that matches your search string
-            var mac = query
-                .Where(q => q.IPProperties.UnicastAddresses
-                    .Any(ua => ua.Address.ToString() == ipAddress))
-                .FirstOrDefault()
-                .PhysicalAddress;
-
-            // Return the mac address with formatting (eg "00-00-00-00-00-00")
-            return string.Join("-", mac.GetAddressBytes().Select(b => b.ToString("X2")));
+            Ping ping = new Ping();
+            IPStatus reply = IPStatus.Unknown;
+            for (int i = 0; i < tries; i++)
+            {
+                reply = ping.Send(ip, timeout).Status;
+                if (reply == IPStatus.Success) break;
+            }
+            return reply;
         }
     }
 }

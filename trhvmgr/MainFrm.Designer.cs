@@ -96,6 +96,7 @@ namespace trhvmgr
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripSpringLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -105,11 +106,11 @@ namespace trhvmgr
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label2 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.collectionsList = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.queryText = new System.Windows.Forms.TextBox();
+            this.collectionsList = new System.Windows.Forms.ListBox();
             this.mainToolstrip.SuspendLayout();
             this.mainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.treeListView)).BeginInit();
@@ -300,26 +301,45 @@ namespace trhvmgr
             this.treeListView.AllColumns.Add(this.olvColumn1);
             this.treeListView.AllColumns.Add(this.olvColumn2);
             this.treeListView.AllColumns.Add(this.olvColumn3);
+            this.treeListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.treeListView.CellEditUseWholeCell = false;
             this.treeListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn1,
             this.olvColumn2,
             this.olvColumn3});
             this.treeListView.Cursor = System.Windows.Forms.Cursors.Default;
-            this.treeListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeListView.EmptyListMsg = "Add server to continue.";
+            this.treeListView.FullRowSelect = true;
             this.treeListView.Location = new System.Drawing.Point(3, 3);
+            this.treeListView.Margin = new System.Windows.Forms.Padding(4);
+            this.treeListView.MultiSelect = false;
             this.treeListView.Name = "treeListView";
+            this.treeListView.SelectColumnsOnRightClickBehaviour = BrightIdeasSoftware.ObjectListView.ColumnSelectBehaviour.Submenu;
+            this.treeListView.ShowCommandMenuOnRightClick = true;
             this.treeListView.ShowGroups = false;
+            this.treeListView.ShowImagesOnSubItems = true;
+            this.treeListView.ShowItemToolTips = true;
             this.treeListView.Size = new System.Drawing.Size(786, 345);
+            this.treeListView.SmallImageList = this.imageList1;
             this.treeListView.TabIndex = 3;
+            this.treeListView.TileSize = new System.Drawing.Size(16, 16);
             this.treeListView.UseCompatibleStateImageBehavior = false;
+            this.treeListView.UseFilterIndicator = true;
+            this.treeListView.UseFiltering = true;
+            this.treeListView.UseHotItem = true;
+            this.treeListView.UseTranslucentSelection = true;
             this.treeListView.View = System.Windows.Forms.View.Details;
             this.treeListView.VirtualMode = true;
+            this.treeListView.ItemActivate += new System.EventHandler(this.treeListView_ItemActivate);
             // 
             // olvColumn1
             // 
             this.olvColumn1.AspectName = "Name";
+            this.olvColumn1.IsTileViewColumn = true;
             this.olvColumn1.Text = "Name";
+            this.olvColumn1.UseInitialLetterForGroup = true;
             this.olvColumn1.Width = 316;
             // 
             // olvColumn2
@@ -330,9 +350,17 @@ namespace trhvmgr
             // 
             // olvColumn3
             // 
-            this.olvColumn3.AspectName = "UUID";
+            this.olvColumn3.AspectName = "Uuid";
             this.olvColumn3.Text = "UUID";
             this.olvColumn3.Width = 113;
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "help.png");
+            this.imageList1.Images.SetKeyName(1, "computer.png");
+            this.imageList1.Images.SetKeyName(2, "monitor_window.png");
             // 
             // statusStrip1
             // 
@@ -376,6 +404,7 @@ namespace trhvmgr
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(800, 388);
             this.tabControl.TabIndex = 4;
+            this.tabControl.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl_Selected);
             // 
             // tabPage1
             // 
@@ -428,17 +457,6 @@ namespace trhvmgr
             this.splitContainer1.SplitterDistance = 262;
             this.splitContainer1.TabIndex = 3;
             // 
-            // collectionsList
-            // 
-            this.collectionsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.collectionsList.FormattingEnabled = true;
-            this.collectionsList.ItemHeight = 16;
-            this.collectionsList.Location = new System.Drawing.Point(0, 17);
-            this.collectionsList.Name = "collectionsList";
-            this.collectionsList.Size = new System.Drawing.Size(262, 299);
-            this.collectionsList.TabIndex = 1;
-            this.collectionsList.SelectedIndexChanged += new System.EventHandler(this.collectionsList_SelectedIndexChanged);
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -477,6 +495,17 @@ namespace trhvmgr
             this.queryText.Size = new System.Drawing.Size(726, 22);
             this.queryText.TabIndex = 4;
             this.queryText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.queryText_KeyDown);
+            // 
+            // collectionsList
+            // 
+            this.collectionsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.collectionsList.FormattingEnabled = true;
+            this.collectionsList.ItemHeight = 16;
+            this.collectionsList.Location = new System.Drawing.Point(0, 17);
+            this.collectionsList.Name = "collectionsList";
+            this.collectionsList.Size = new System.Drawing.Size(262, 299);
+            this.collectionsList.TabIndex = 3;
+            this.collectionsList.SelectedIndexChanged += new System.EventHandler(this.collectionsList_SelectedIndexChanged);
             // 
             // MainFrm
             // 
@@ -539,7 +568,6 @@ namespace trhvmgr
         private TabPage tabPage1;
         private TabPage tabPage2;
         private DataGridView dataGridView;
-        private ListBox collectionsList;
         private SplitContainer splitContainer1;
         private Label label1;
         private Label label2;
@@ -553,5 +581,7 @@ namespace trhvmgr
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripButton toolStripButton6;
         private Panel panel1;
+        private ImageList imageList1;
+        private ListBox collectionsList;
     }
 }

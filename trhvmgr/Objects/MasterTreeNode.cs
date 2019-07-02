@@ -20,7 +20,7 @@ namespace trhvmgr.Objects
     {
         public string Name { get; set; }
         public string Host { get; set; }
-        public Guid UUID { get; set; }
+        public string Uuid { get; set; }
 
         public NodeType Type { get; set; }
         public List<MasterTreeNode> Children = new List<MasterTreeNode>();
