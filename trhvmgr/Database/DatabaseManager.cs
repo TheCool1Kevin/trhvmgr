@@ -24,14 +24,6 @@ namespace trhvmgr.Database
 
         #region Public Methods
 
-        public void AddServer(DbHostComputer dbHost)
-        {
-            var hosts = _db.GetCollection<DbHostComputer>("hosts");
-            hosts.Insert(dbHost);
-            hosts.EnsureIndex(x => x.HostName);
-            RegenerateTree();
-        }
-
         public void RegenerateTree()
         {
             TreeNodes.Clear();
@@ -68,7 +60,26 @@ namespace trhvmgr.Database
 
         #endregion
 
-        #region Exposed Methods
+        #region Add/Get/Set Server/VM Commands
+
+        public void AddServer(DbHostComputer dbHost)
+        {
+            var hosts = _db.GetCollection<DbHostComputer>("hosts");
+            hosts.Insert(dbHost);
+            hosts.EnsureIndex(x => x.HostName);
+            RegenerateTree();
+        }
+
+        public List<DbHostComputer> GetServers()
+        {
+            List<DbHostComputer> ret = new List<DbHostComputer>();
+            var hosts = _db.GetCollection<DbHostComputer>("hosts");
+            return hosts.FindAll().ToList();
+        }
+
+        #endregion
+
+        #region Exposed DB Methods
 
         public IEnumerable<string> GetCollectionNames() => _db.GetCollectionNames();
 

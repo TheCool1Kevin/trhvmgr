@@ -66,7 +66,7 @@ namespace trhvmgr
         private void addbtn_Click(object sender, EventArgs e)
         {
             ValidateTexts();
-            if(hostnameText.IsValid == tribool.TRUE && ipText.IsValid == tribool.TRUE /*&& macText.IsValid == tribool.TRUE*/)
+            if(hostnameText.IsValid == tribool.TRUE && ipText.IsValid == tribool.TRUE && macText.IsValid == tribool.TRUE)
             {
                 this.DialogResult = DialogResult.OK;
                 SessionManager.Instance.Database.AddServer(new DbHostComputer { HostName = hostnameText.Text });

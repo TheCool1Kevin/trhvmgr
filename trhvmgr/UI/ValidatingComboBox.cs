@@ -109,6 +109,19 @@ namespace trhvmgr.UI
 
         #region Global Variables
 
+        public ColorComboBox ComboBox
+        {
+            get
+            {
+                return comboBox1;
+            }
+
+            private set
+            {
+                comboBox1 = value;
+            }
+        }
+
         private tribool _isvalid = tribool.NEUTRAL;
         public tribool IsValid
         {
