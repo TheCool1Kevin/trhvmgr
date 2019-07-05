@@ -1,6 +1,6 @@
 ﻿namespace trhvmgr.UI
 {
-    partial class ValidatingTextbox
+    partial class ValidatingMaskedTextbox
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ValidatingTextbox));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ValidatingMaskedTextbox));
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.textBox1 = new trhvmgr.UI.ColorTextBox();
+            this.textBox1 = new trhvmgr.UI.ColorMaskedTextBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -126,7 +126,7 @@
             // 
             this.toolTip2.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Error;
             // 
-            // ValidatingTextbox
+            // ValidatingMaskedTextbox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -135,7 +135,7 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label1);
             this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.Name = "ValidatingTextbox";
+            this.Name = "ValidatingMaskedTextbox";
             this.Size = new System.Drawing.Size(382, 18);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);
@@ -153,6 +153,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ToolTip toolTip2;
-        public ColorTextBox textBox1;
+        public ColorMaskedTextBox textBox1;
     }
 }

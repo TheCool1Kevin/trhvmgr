@@ -91,6 +91,24 @@ namespace trhvmgr.UI
             get; set;
         }
 
+        private bool _enabled = true;
+        [Description("Enabled"), Category("Label")]
+        public bool Enabled
+        {
+            get
+            {
+                return _enabled;
+            }
+
+            set
+            {
+                _enabled = value;
+                this.button1.Enabled = _enabled;
+                this.comboBox1.Enabled = _enabled;
+                this.pictureBox1.Enabled = _enabled;
+            }
+        }
+
         [Description("Button clicked event"), Category("Action")]
         public event EventHandler ButtonClick;
 

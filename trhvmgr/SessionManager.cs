@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
 using trhvmgr.Database;
@@ -32,6 +33,7 @@ namespace trhvmgr
         #region Public Properties
 
         public DatabaseManager Database { get; private set; }
+        public PSCredential PSCredential { get; private set; }
 
         #endregion
 

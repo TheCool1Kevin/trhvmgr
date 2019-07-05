@@ -78,12 +78,13 @@ namespace trhvmgr
 
             // Get virtual machines
             foreach (var s in hostComputers)
-            {
                 foreach (var vm in Interface.GetVms(s.HostName))
-                {
-
-                }
-            }
+                    if (vm.Type == VirtualMachineType.BASE)
+                        virtualMachines.Add(vm);
+            virtualMachines.ForEach(x =>
+            {
+                baseComboBox.ComboBox.Items.Add(x.Name + " [" + x.Host + "]");
+            });
         }
 
         #endregion

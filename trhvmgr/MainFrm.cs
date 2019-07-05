@@ -56,6 +56,11 @@ namespace trhvmgr
                 return imageList1.Images[0];
             };
 
+            this.olvColumn3.AspectGetter = delegate (object rowObject)
+            {
+                return ((string) rowObject).ToUpper();
+            };
+
             this.treeListView.Roots = databaseManager.TreeNodes;
 
             // TODO: High DPI Awareness
@@ -76,6 +81,13 @@ namespace trhvmgr
 
         private void MainFrm_Load(object sender, EventArgs e)
         {
+            // Get auth
+            var dlg = new StartupDialog();
+            dlg.ShowDialog();
+            if (dlg.DialogResult != DialogResult.OK)
+                this.Close();
+
+            // Initialize tree
             SetupMasterTree();
         }
 

@@ -140,7 +140,7 @@
             this.vmTextbox.LabelText = "Template VM Name: ";
             this.vmTextbox.LabelWidth = 110;
             this.vmTextbox.Location = new System.Drawing.Point(10, 23);
-            this.vmTextbox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.vmTextbox.Margin = new System.Windows.Forms.Padding(2);
             this.vmTextbox.Name = "vmTextbox";
             this.vmTextbox.Size = new System.Drawing.Size(367, 18);
             this.vmTextbox.TabIndex = 3;
@@ -156,6 +156,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "AddTemplateDialog";
             this.Padding = new System.Windows.Forms.Padding(8);
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add Template VM";
             this.Load += new System.EventHandler(this.AddTemplateDialog_Load);
             this.groupBox1.ResumeLayout(false);

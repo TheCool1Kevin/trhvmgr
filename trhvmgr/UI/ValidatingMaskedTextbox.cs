@@ -11,7 +11,7 @@ using trhvmgr.Lib;
 
 namespace trhvmgr.UI
 {
-    public partial class ValidatingTextbox : UserControl
+    public partial class ValidatingMaskedTextbox : UserControl
     {
         #region UI Properties and Events
 
@@ -116,7 +116,7 @@ namespace trhvmgr.UI
 
         #region Constructor
 
-        public ValidatingTextbox()
+        public ValidatingMaskedTextbox()
         {
             InitializeComponent();
             pictureBox1.Image = null;

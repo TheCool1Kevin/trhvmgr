@@ -15,12 +15,21 @@ namespace trhvmgr.Database
         public List<MasterTreeNode> TreeNodes { get; private set; }
         private LiteDatabase _db;
 
-        public DatabaseManager()
+        #region Constructor
+
+        public DatabaseManager(string connectionString)
         {
             TreeNodes = new List<MasterTreeNode>();
-            _db = new LiteDatabase(ConfigurationManager.ConnectionStrings["ServerDB"].ConnectionString);
+            _db = new LiteDatabase(connectionString);
             RegenerateTree();
         }
+
+        public DatabaseManager() : this(ConfigurationManager.ConnectionStrings["ServerDB"].ConnectionString)
+        {
+
+        }
+
+        #endregion
 
         #region Public Methods
 

@@ -13,6 +13,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -25,7 +26,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -34,7 +34,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -43,7 +43,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -119,6 +119,7 @@
     <Compile Include="Objects\HostComputer.cs" />
     <Compile Include="Objects\MasterTreeNode.cs" />
     <Compile Include="Objects\VirtualMachine.cs" />
+    <Compile Include="Plugs\HyperV.cs" />
     <Compile Include="Plugs\Interface.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -129,6 +130,12 @@
       <DependentUpon>ServerProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="SessionManager.cs" />
+    <Compile Include="StartupDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StartupDialog.Designer.cs">
+      <DependentUpon>StartupDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\BackgroundWorkerQueueDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -136,6 +143,9 @@
       <DependentUpon>BackgroundWorkerQueueDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\ColorComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\ColorMaskedTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UI\ColorTextBox.cs">
@@ -146,6 +156,12 @@
     </Compile>
     <Compile Include="UI\ValidatingComboBox.Designer.cs">
       <DependentUpon>ValidatingComboBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ValidatingMaskedTextbox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\ValidatingMaskedTextbox.Designer.cs">
+      <DependentUpon>ValidatingMaskedTextbox.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\ValidatingTextbox.cs">
       <SubType>UserControl</SubType>
@@ -178,11 +194,17 @@
     <EmbeddedResource Include="ServerProperties.resx">
       <DependentUpon>ServerProperties.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="StartupDialog.resx">
+      <DependentUpon>StartupDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\BackgroundWorkerQueueDialog.resx">
       <DependentUpon>BackgroundWorkerQueueDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\ValidatingComboBox.resx">
       <DependentUpon>ValidatingComboBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ValidatingMaskedTextbox.resx">
+      <DependentUpon>ValidatingMaskedTextbox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\ValidatingTextbox.resx">
       <DependentUpon>ValidatingTextbox.cs</DependentUpon>

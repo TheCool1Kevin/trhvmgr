@@ -11,6 +11,7 @@ using System.Windows.Forms;
 
 using trhvmgr.Lib;
 using trhvmgr.Objects;
+using trhvmgr.Plugs;
 using trhvmgr.UI;
 
 namespace trhvmgr
@@ -57,6 +58,12 @@ namespace trhvmgr
             macText.IsValid = (string.IsNullOrWhiteSpace(macText.Text) ||
                 backgroundWorker.GetWorker().ReturnedObjects[2].s != (int)StatusCode.OK) ?
                     tribool.FALSE : tribool.TRUE;
+
+            // Get VMs
+            Interface.GetVms(hostnameText.Text)?.ForEach(x =>
+            {
+                listBox1.Items.Add(x.Name + " [" + x.Uuid.ToString().ToUpper() + "]");
+            });
         }
 
         #endregion

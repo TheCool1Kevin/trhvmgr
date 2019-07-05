@@ -433,7 +433,7 @@ namespace trhvmgr
             this.tabPage2.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(2);
-            this.tabPage2.Size = new System.Drawing.Size(592, 272);
+            this.tabPage2.Size = new System.Drawing.Size(592, 275);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Database";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -463,7 +463,7 @@ namespace trhvmgr
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.dataGridView);
-            this.splitContainer1.Size = new System.Drawing.Size(588, 244);
+            this.splitContainer1.Size = new System.Drawing.Size(588, 247);
             this.splitContainer1.SplitterDistance = 196;
             this.splitContainer1.SplitterWidth = 3;
             this.splitContainer1.TabIndex = 3;
@@ -475,7 +475,7 @@ namespace trhvmgr
             this.collectionsList.Location = new System.Drawing.Point(0, 13);
             this.collectionsList.Margin = new System.Windows.Forms.Padding(2);
             this.collectionsList.Name = "collectionsList";
-            this.collectionsList.Size = new System.Drawing.Size(196, 231);
+            this.collectionsList.Size = new System.Drawing.Size(196, 234);
             this.collectionsList.TabIndex = 3;
             this.collectionsList.SelectedIndexChanged += new System.EventHandler(this.collectionsList_SelectedIndexChanged);
             // 
@@ -497,7 +497,7 @@ namespace trhvmgr
             this.dataGridView.Margin = new System.Windows.Forms.Padding(2);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowTemplate.Height = 24;
-            this.dataGridView.Size = new System.Drawing.Size(389, 244);
+            this.dataGridView.Size = new System.Drawing.Size(389, 247);
             this.dataGridView.TabIndex = 0;
             this.dataGridView.CellValuePushed += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView_CellValuePushed);
             // 
@@ -535,6 +535,7 @@ namespace trhvmgr
             this.MainMenuStrip = this.mainMenu;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MainFrm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "VM Manager";
             this.Load += new System.EventHandler(this.MainFrm_Load);
             this.mainToolstrip.ResumeLayout(false);
