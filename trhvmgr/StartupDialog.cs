@@ -6,6 +6,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Management.Automation;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,6 +41,8 @@ namespace trhvmgr
             else
             {
                 DialogResult = DialogResult.OK;
+                PSCredential cred = new PSCredential(userTxt.Text, new NetworkCredential("", pswTxt.Text).SecurePassword);
+                SessionManager.Instance.SetCredential(cred);
                 return;
             }
 

@@ -69,7 +69,7 @@ namespace trhvmgr
             }
 
             // Add options to combobox
-            serverComboBox.ComboBox.Items.Add("Automatic");
+            serverComboBox.ComboBox.Items.Add("[Automatic]");
             hostComputers.ForEach(x =>
             {
                 if (!string.IsNullOrEmpty(x.HostName) && !string.IsNullOrEmpty(x.IpAddress) && !string.IsNullOrEmpty(x.MacAddress))
@@ -85,6 +85,10 @@ namespace trhvmgr
             {
                 baseComboBox.ComboBox.Items.Add(x.Name + " [" + x.Host + "]");
             });
+
+            // Make all default selected indicies 0
+            serverComboBox.SelectedIndex = 0;
+            baseComboBox.SelectedIndex = 0;
         }
 
         #endregion

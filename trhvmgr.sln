@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.28307.489
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "trhvmgr", "trhvmgr\trhvmgr.csproj", "{001D4F37-BB7E-43C2-9831-CD29DF1394E2}"
-	ProjectSection(ProjectDependencies) = postProject
-		{243EB8AB-EE68-44BA-A516-78CD21A63AE0} = {243EB8AB-EE68-44BA-A516-78CD21A63AE0}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "trhvmgr.Interactive", "trhvmgr.Console\trhvmgr.Interactive.csproj", "{243EB8AB-EE68-44BA-A516-78CD21A63AE0}"
 EndProject

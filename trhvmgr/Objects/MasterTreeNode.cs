@@ -10,7 +10,8 @@ namespace trhvmgr.Objects
     public enum NodeType
     {
         HostComputer,
-        VirtualMachines
+        VirtualMachines,
+        VirtualHardDisks
     };
 
     /// <summary>

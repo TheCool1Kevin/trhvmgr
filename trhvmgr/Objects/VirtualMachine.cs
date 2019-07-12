@@ -19,7 +19,7 @@ namespace trhvmgr.Objects
     {
         public string Name { get; set; }
         public string Host { get; set; }
-        public string VhdPath { get; set; }
+        public string[] VhdPath { get; set; }
         public Guid Uuid { get; set; }
         public VirtualMachineType Type { get; set; }
     }

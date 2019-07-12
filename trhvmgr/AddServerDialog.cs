@@ -60,6 +60,7 @@ namespace trhvmgr
                     tribool.FALSE : tribool.TRUE;
 
             // Get VMs
+            listBox1.Items.Clear();
             Interface.GetVms(hostnameText.Text)?.ForEach(x =>
             {
                 listBox1.Items.Add(x.Name + " [" + x.Uuid.ToString().ToUpper() + "]");

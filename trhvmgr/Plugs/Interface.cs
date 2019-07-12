@@ -39,7 +39,7 @@ namespace trhvmgr.Plugs
                 Host = hostName,
                 Name = "Test Machine A",
                 Uuid = Guid.NewGuid(),
-                VhdPath = "C:\\Path\\To\\Machine\\A",
+                VhdPath = new string[] { "C:\\Path\\To\\Machine\\A" },
                 Type = VirtualMachineType.BASE
             });
             machines.Add(new VirtualMachine
@@ -47,7 +47,7 @@ namespace trhvmgr.Plugs
                 Host = hostName,
                 Name = "Test Machine B",
                 Uuid = Guid.NewGuid(),
-                VhdPath = "C:\\Path\\To\\Machine\\B",
+                VhdPath = new string[] { "C:\\Path\\To\\Machine\\B1", "C:\\Path\\To\\Machine\\B2" },
                 Type = VirtualMachineType.TEMPLATE
             });
             machines.Add(new VirtualMachine
@@ -55,7 +55,7 @@ namespace trhvmgr.Plugs
                 Host = hostName,
                 Name = "Test Machine C",
                 Uuid = Guid.NewGuid(),
-                VhdPath = "C:\\Path\\To\\Machine\\C",
+                VhdPath = new string[] { "C:\\Path\\To\\Machine\\A", "C:\\Path\\To\\Machine\\C" },
                 Type = VirtualMachineType.DEPLOY
             });
             return machines;

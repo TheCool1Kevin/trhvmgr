@@ -1,0 +1,42 @@
+﻿{
+  "templates": [
+    // Parameters are given in the following order:
+    // [0] - VM Name
+    // [1] - VHD Name
+    // [2] - Network Switch Description
+
+    {
+      "name": "PxeBase",
+      "actions": [
+        {
+          "ps": "New-VM",
+          "pipevmid":  true, // Pass result's VM ID to future Get-VM calls
+          "params": {
+            "Name": "{0}",
+            "BootDevice": "LegacyNetworkAdapter",
+            "Generation": 1,
+            "NewVHDPath": "C:\\VHDs\\{1}.vhdx",
+            "NewVHDSizeBytes": 107374182400, // 100 GiB
+            "SwitchName": "{2}"
+          }
+        },
+        {
+          "ps": "Set-VM",
+          "getvm":  true, // Pipes Get-VM from ID to command
+          "params": {
+            "DynamicMemory": null,
+            "CheckpointType": "Standard",
+            "AutomaticCheckpointsEnabled": false
+          }
+        },
+        {
+          "ps": "Set-VMBios",
+          "getvm":  true,
+          "params": {
+            "StartupOrder": [ "LegacyNetworkAdapter", "IDE" ]
+          }
+        }
+      ]
+    }
+  ]
+}

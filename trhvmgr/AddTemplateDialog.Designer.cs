@@ -49,7 +49,7 @@
             this.groupBox1.Location = new System.Drawing.Point(8, 8);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(8);
-            this.groupBox1.Size = new System.Drawing.Size(387, 139);
+            this.groupBox1.Size = new System.Drawing.Size(345, 139);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Template VM Properties";
@@ -73,7 +73,7 @@
             this.serverComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.serverComboBox.Name = "serverComboBox";
             this.serverComboBox.SelectedIndex = -1;
-            this.serverComboBox.Size = new System.Drawing.Size(367, 21);
+            this.serverComboBox.Size = new System.Drawing.Size(325, 21);
             this.serverComboBox.TabIndex = 9;
             // 
             // baseComboBox
@@ -95,14 +95,14 @@
             this.baseComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.baseComboBox.Name = "baseComboBox";
             this.baseComboBox.SelectedIndex = -1;
-            this.baseComboBox.Size = new System.Drawing.Size(367, 21);
+            this.baseComboBox.Size = new System.Drawing.Size(325, 21);
             this.baseComboBox.TabIndex = 8;
             // 
             // cancelbtn
             // 
             this.cancelbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelbtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelbtn.Location = new System.Drawing.Point(321, 105);
+            this.cancelbtn.Location = new System.Drawing.Point(279, 105);
             this.cancelbtn.Margin = new System.Windows.Forms.Padding(2);
             this.cancelbtn.Name = "cancelbtn";
             this.cancelbtn.Padding = new System.Windows.Forms.Padding(2);
@@ -114,7 +114,7 @@
             // addbtn
             // 
             this.addbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addbtn.Location = new System.Drawing.Point(261, 105);
+            this.addbtn.Location = new System.Drawing.Point(219, 105);
             this.addbtn.Margin = new System.Windows.Forms.Padding(2);
             this.addbtn.Name = "addbtn";
             this.addbtn.Padding = new System.Windows.Forms.Padding(2);
@@ -142,7 +142,7 @@
             this.vmTextbox.Location = new System.Drawing.Point(10, 23);
             this.vmTextbox.Margin = new System.Windows.Forms.Padding(2);
             this.vmTextbox.Name = "vmTextbox";
-            this.vmTextbox.Size = new System.Drawing.Size(367, 18);
+            this.vmTextbox.Size = new System.Drawing.Size(325, 18);
             this.vmTextbox.TabIndex = 3;
             // 
             // AddTemplateDialog
@@ -151,7 +151,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancelbtn;
-            this.ClientSize = new System.Drawing.Size(403, 155);
+            this.ClientSize = new System.Drawing.Size(361, 155);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "AddTemplateDialog";

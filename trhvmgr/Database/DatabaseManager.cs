@@ -13,6 +13,7 @@ namespace trhvmgr.Database
     public class DatabaseManager : IDisposable
     {
         public List<MasterTreeNode> TreeNodes { get; private set; }
+
         private LiteDatabase _db;
 
         #region Constructor
@@ -51,16 +52,26 @@ namespace trhvmgr.Database
                 // First, add all virtual machines associated with this host
                 foreach (var v in Interface.GetVms(h.HostName))
                 {
-                    var vm = virts.FindOne(x => x.Uuid == v.Uuid);
-                    root.Children.Add(new MasterTreeNode
+                    var vnode = new MasterTreeNode
                     {
                         Name = v.Name,
                         Host = v.Host,
-                        Uuid = v.Uuid.ToString(),
-                        Type = NodeType.VirtualMachines
-                    });
+                        Uuid = v.Uuid.ToString().ToUpper(),
+                        Type = NodeType.VirtualMachines,
+                    };
+                    foreach (var vhd in v.VhdPath)
+                    {
+                        vnode.Children.Add(new MasterTreeNode
+                        {
+                            Name = vhd,
+                            Host = v.Host,
+                            Type = NodeType.VirtualHardDisks
+                        });
+                    }
+                    root.Children.Add(vnode);
                 }
                 // Then, add all virtual hard disks associated with this host
+
 
                 // Finally, add this host to our tree
                 TreeNodes.Add(root);

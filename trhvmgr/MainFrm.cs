@@ -56,11 +56,6 @@ namespace trhvmgr
                 return imageList1.Images[0];
             };
 
-            this.olvColumn3.AspectGetter = delegate (object rowObject)
-            {
-                return ((string) rowObject).ToUpper();
-            };
-
             this.treeListView.Roots = databaseManager.TreeNodes;
 
             // TODO: High DPI Awareness
@@ -151,13 +146,13 @@ namespace trhvmgr
 
         private void addVhdToolButton_Click(object sender, EventArgs e)
         {
-            new AddTemplateDialog().ShowDialog();
+            new AddVhdDialog().ShowDialog();
             treeListView.SetObjects(databaseManager.TreeNodes);
         }
 
         #endregion
 
-        // TODO: Database really broken :/
+        // TODO: Database code really broken :(
         #region Database Code
 
         // Modified from falahati/LiteDBViewer

@@ -49,6 +49,18 @@ namespace trhvmgr
             Database = new DatabaseManager();
         }
 
+        public void InitializeDatabase(string connectionString)
+        {
+            Database?.Dispose();
+            Database = null;
+            Database = new DatabaseManager(connectionString);
+        }
+
+        public void SetCredential(PSCredential cred)
+        {
+            this.PSCredential = cred;
+        }
+
         #endregion
     }
 }
