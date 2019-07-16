@@ -94,8 +94,16 @@ namespace trhvmgr.Interactive
                 for (int i = 0; i < doc["templates"].Count(); i++)
                     Console.WriteLine($"[{ i }] { doc["templates"][i]["name"] }");
                 var config = doc["templates"][GetSelectedIndex()];
-                PSWrapper.Execute(server, config);
+                PSWrapper.Execute(server, config, name, vhdpath, vmswitch);
             }
+        }
+
+        [CommandInfo(0, 1, ParameterSyntax = "[HostName]", HelpText = "")]
+        public static void wake(string[] tokens)
+        {
+            string server = Dns.GetHostName();
+            if (tokens.Length == 2) server = tokens[1];
+            Interface.BringOnline(server);
         }
     }
 }

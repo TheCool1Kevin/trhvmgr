@@ -28,6 +28,15 @@ namespace trhvmgr.Plugs
             return GetRunspace(SessionManager.Instance.PSCredential, hostName);
         }
 
+        public static void BringOnline(string hostName)
+        {
+            using (PowerShell ps = PowerShell.Create())
+            {
+                var ret = ps.AddCommand("New-PSSession").AddParameter("ComputerName", hostName).AddParameter("Credential", SessionManager.Instance.PSCredential).Invoke();
+                ps.AddCommand("Remove-PSSession").AddParameter("Session", ret).Invoke();
+            }
+        }
+
         #endregion
 
         #region Virtual Machine State Query

@@ -42,9 +42,20 @@ namespace trhvmgr.Lib
             }
         }
 
-        public static void Execute(string host, JToken cfg)
+        public static void Execute(string host, JToken cfg, params object[] args)
         {
-
+            Guid vmid;
+            foreach(var cmd in cfg["actions"])
+            {
+                bool? a = cmd["pipevmid"]?.Value<bool>();
+                string ps = cmd["ps"].Value<string>();
+                var pa = JsonConvert.DeserializeObject<Dictionary<string, object>>(cmd["params"].ToString());
+                foreach(var k in JsonConvert.DeserializeObject<Dictionary<string, object>>(cmd["params"].ToString()).Keys)
+                {
+                    if (pa[k] is string)
+                        pa[k] = string.Format(pa[k] as string, args);
+                }
+            }
         }
     }
 }

@@ -122,6 +122,7 @@
     <Compile Include="Lib\BackgroundWorkerQueue.cs" />
     <Compile Include="Lib\NetworkUtil.cs" />
     <Compile Include="Lib\NetworkWorkerObject.cs" />
+    <Compile Include="Lib\PSWrapper.cs" />
     <Compile Include="Lib\tribool.cs" />
     <Compile Include="Lib\NetworkWorkers.cs" />
     <Compile Include="MainFrm.cs">

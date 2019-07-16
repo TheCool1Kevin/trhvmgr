@@ -125,6 +125,7 @@ namespace trhvmgr.Interactive
             RegisterCommand("gethostadapters");
             RegisterCommand("getswitches");
             RegisterCommand("newvm");
+            RegisterCommand("wake");
 
             // Display welcoming UI
             Console.ForegroundColor = ConsoleColor.White;
