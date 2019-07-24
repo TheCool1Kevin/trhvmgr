@@ -26,6 +26,41 @@ namespace trhvmgr.Interactive
             return _idx;
         }
 
+        static int tableWidth = 110;
+
+        static void PrintLine()
+        {
+            Console.WriteLine("|" + new string('-', tableWidth-3) + "|");
+        }
+
+        static void PrintRow(params string[] columns)
+        {
+            int width = (tableWidth - columns.Length) / columns.Length;
+            string row = "|";
+
+            foreach (string column in columns)
+            {
+                row += AlignCentre(column, width) + "|";
+            }
+
+            Console.WriteLine(row);
+        }
+
+        static string AlignCentre(string text, int width)
+        {
+            if (text == null) text = "";
+            text = text.Length > width ? text.Substring(0, width - 3) + "..." : text;
+
+            if (string.IsNullOrEmpty(text))
+            {
+                return new string(' ', width);
+            }
+            else
+            {
+                return text.PadRight(width - (width - text.Length) / 2).PadLeft(width);
+            }
+        }
+
         #endregion
 
         [CommandInfo(0, 1, ParameterSyntax = "[HostName]", HelpText = "")]
@@ -42,12 +77,22 @@ namespace trhvmgr.Interactive
         {
             string server = Dns.GetHostName();
             if (tokens.Length == 2) server = tokens[1];
-            foreach (var obj in NetAdapter.GetNetAdapter(server))
+            var adapters = NetAdapter.GetNetAdapter(server);
+            PrintRow(new string[] { "Name", "InterfaceDescription", "MacAddress", "Status" });
+            PrintLine();
+            foreach (var obj in adapters)
             {
-                Console.WriteLine($"[Name=\"{(string)obj.Members["Name"].Value}\"] [InterfaceDescription=\"{(string)obj.Members["InterfaceDescription"].Value}\"] " +
-                    $"[MacAddress={(string)obj.Members["MacAddress"].Value}] [Status={(string)obj.Members["ifOperStatus"].Value}]");
-
+                PrintRow(new string[]
+                {
+                    (string)obj.Members["Name"].Value,
+                    (string)obj.Members["InterfaceDescription"].Value,
+                    (string)obj.Members["MacAddress"].Value,
+                    (string)obj.Members["ifOperStatus"].Value
+                });
             }
+            Console.WriteLine();
+            foreach (var obj in adapters)
+                Console.WriteLine(obj);
         }
 
         [CommandInfo(0, 1, ParameterSyntax = "[HostName]", HelpText = "")]
@@ -55,16 +100,27 @@ namespace trhvmgr.Interactive
         {
             string server = Dns.GetHostName();
             if (tokens.Length == 2) server = tokens[1];
-            foreach (var obj in HyperV.GetVmSwitch(server))
+            PrintRow(new string[] { "Name", "NetAdapterInterfaceDescription", "SwitchType", "Id" });
+            PrintLine();
+            var switches = HyperV.GetVmSwitch(server);
+            foreach (var obj in switches)
             {
                 if ((string)obj.Members["SwitchType"].Value == "External")
                     Console.ForegroundColor = ConsoleColor.Green;
                 else
                     Console.ForegroundColor = ConsoleColor.Gray;
-                Console.WriteLine($"[Name=\"{(string)obj.Members["Name"].Value}\"] [NetAdapterInterfaceDescription=\"{(string)obj.Members["NetAdapterInterfaceDescription"].Value}\"] " +
-                    $"[SwitchType={(string)obj.Members["SwitchType"].Value}] [Id={(Guid)obj.Members["Id"].Value}]");
+                PrintRow(new string[]
+                {
+                    (string)obj.Members["Name"].Value,
+                    (string)obj.Members["NetAdapterInterfaceDescription"].Value,
+                    (string)obj.Members["SwitchType"].Value,
+                    ((Guid)obj.Members["Id"].Value).ToString()
+                });
                 Console.ForegroundColor = ConsoleColor.White;
             }
+            Console.WriteLine();
+            foreach (var obj in switches)
+                Console.WriteLine(obj);
         }
 
         [CommandInfo(0, 1, ParameterSyntax = "[HostName]", HelpText = "")]

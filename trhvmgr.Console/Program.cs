@@ -75,7 +75,7 @@ namespace trhvmgr.Interactive
 
         static void RunCommand(string[] tokens)
         {
-            MethodBase action = CommandRegistry[tokens[0]];
+            MethodBase action = CommandRegistry[tokens[0].ToLower()];
             CommandInfo attr = null;
             foreach(var a in action.GetCustomAttributes(true))
             {
@@ -104,7 +104,7 @@ namespace trhvmgr.Interactive
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Exception: " + e.Message);
+                    Console.WriteLine("Exception: " + e.InnerException.Message);
                 }
             }
             else

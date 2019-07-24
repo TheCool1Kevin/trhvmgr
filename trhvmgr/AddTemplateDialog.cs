@@ -87,8 +87,8 @@ namespace trhvmgr
             });
 
             // Make all default selected indicies 0
-            serverComboBox.SelectedIndex = 0;
-            baseComboBox.SelectedIndex = 0;
+            //serverComboBox.SelectedIndex = 0;
+            //baseComboBox.SelectedIndex = 0;
         }
 
         #endregion
