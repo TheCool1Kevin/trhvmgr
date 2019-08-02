@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
 
 namespace trhvmgr.Lib
@@ -35,7 +37,7 @@ namespace trhvmgr.Lib
                 // Get IP from hostname
                 string server = ((NetworkWorkerObject)ctx.o).HostName;
                 IPHostEntry hostEntry = Dns.GetHostEntry(server);
-                ((NetworkWorkerObject)ctx.o).IpAddress = hostEntry.AddressList[0].ToString();
+                ((NetworkWorkerObject)ctx.o).IpAddress = hostEntry.AddressList.Where((x) => x.AddressFamily == AddressFamily.InterNetwork).ToArray()[0].ToString();
                 ctx.s = (int)StatusCode.OK;
                 return ctx;
             }

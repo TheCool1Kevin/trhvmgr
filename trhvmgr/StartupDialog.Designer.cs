@@ -35,7 +35,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.dbfileTxt = new trhvmgr.UI.ValidatingTextbox();
             this.serverTxt = new trhvmgr.UI.ValidatingTextbox();
-            this.pswTxt = new trhvmgr.UI.ValidatingMaskedTextbox();
+            this.pswTxt = new trhvmgr.UI.ValidatingTextbox();
             this.userTxt = new trhvmgr.UI.ValidatingTextbox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -153,6 +153,8 @@
             this.pswTxt.Name = "pswTxt";
             this.pswTxt.Size = new System.Drawing.Size(294, 18);
             this.pswTxt.TabIndex = 1;
+            this.pswTxt.textBox1.TextBox.UseSystemPasswordChar = true;
+
             // 
             // userTxt
             // 
@@ -204,7 +206,7 @@
         private System.Windows.Forms.Button cancelBtn;
         private System.Windows.Forms.GroupBox groupBox1;
         private UI.ValidatingTextbox userTxt;
-        private UI.ValidatingMaskedTextbox pswTxt;
+        private UI.ValidatingTextbox pswTxt;
         private UI.ValidatingTextbox serverTxt;
         private UI.ValidatingTextbox dbfileTxt;
     }

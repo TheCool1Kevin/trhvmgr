@@ -87,7 +87,7 @@ namespace trhvmgr.Lib
         public object Clone()
         {
             var c = this.MemberwiseClone();
-            ((WorkerContext)c).o = (ICloneable) o.Clone();
+            ((WorkerContext)c).o = o != null ? (ICloneable)o.Clone() : null;
             return c;
         }
     }

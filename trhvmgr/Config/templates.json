@@ -10,7 +10,7 @@
       "actions": [
         {
           "ps": "New-VM",
-          "pipevmid":  true, // Pass result's VM ID to future Get-VM calls
+          "pipevmid": true, // Pass result's VM ID to future Get-VM calls
           "params": {
             "Name": "{0}",
             "BootDevice": "LegacyNetworkAdapter",
@@ -22,7 +22,7 @@
         },
         {
           "ps": "Set-VM",
-          "getvm":  true, // Pipes Get-VM from ID to command
+          "getvm": true, // Pipes Get-VM from ID to command
           "params": {
             "DynamicMemory": null,
             "CheckpointType": "Standard",
@@ -31,9 +31,10 @@
         },
         {
           "ps": "Set-VMBios",
-          "getvm":  true,
+          "getvm": false,
           "params": {
-            "StartupOrder": [ "LegacyNetworkAdapter", "IDE" ]
+            "VMName": "{0}",
+            "StartupOrder": [ "LegacyNetworkAdapter", "IDE", "CD", "Floppy" ]
           }
         }
       ]

@@ -4,8 +4,10 @@ using System.Configuration;
 using System.Linq;
 using System.Management.Automation;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace trhvmgr.Interactive
@@ -72,7 +74,6 @@ namespace trhvmgr.Interactive
 
         // Here, we don't use Action<string[]> because we need the attributes
         static Dictionary<string, MethodBase> CommandRegistry = new Dictionary<string, MethodBase>();
-
         static void RunCommand(string[] tokens)
         {
             MethodBase action = CommandRegistry[tokens[0].ToLower()];
@@ -118,14 +119,41 @@ namespace trhvmgr.Interactive
             __zklen__ = Math.Max(__zklen__, name.Length + 1);
         }
 
+        // Intercept ctrl+c signal
+        [DllImport("Kernel32")]
+        public static extern bool SetConsoleCtrlHandler(HandlerRoutine Handler, bool Add);
+        public delegate bool HandlerRoutine(CtrlTypes CtrlType);
+        public enum CtrlTypes
+        {
+            CTRL_C_EVENT = 0,
+            CTRL_BREAK_EVENT,
+            CTRL_CLOSE_EVENT,
+            CTRL_LOGOFF_EVENT = 5,
+            CTRL_SHUTDOWN_EVENT
+        }
+
+        static Task currentTask = null;
+        static CancellationTokenSource tokenSource = null;
+        private static bool ConsoleCtrlCheck(CtrlTypes ctrlType)
+        {
+            if(currentTask != null)
+                tokenSource?.Cancel();
+            return true;
+        }
+
         static void Main(string[] args)
         {
+            // Intercept ctrl+c signal
+            // SetConsoleCtrlHandler(new HandlerRoutine(ConsoleCtrlCheck), true);
+            // tokenSource = new CancellationTokenSource();
+
             // Register commands
             RegisterCommand("getvms");
             RegisterCommand("gethostadapters");
             RegisterCommand("getswitches");
             RegisterCommand("newvm");
             RegisterCommand("wake");
+            RegisterCommand("newvmswitch");
 
             // Display welcoming UI
             Console.ForegroundColor = ConsoleColor.White;
@@ -135,7 +163,7 @@ namespace trhvmgr.Interactive
             SecureString psw = GetPassword();
 
             SessionManager.Instance.SetCredential(new PSCredential(usr, psw));
-            SessionManager.Instance.InitializeDatabase(ConfigurationManager.ConnectionStrings["ServerDB"].ConnectionString);
+            //SessionManager.Instance.InitializeDatabase(ConfigurationManager.ConnectionStrings["ServerDB"].ConnectionString);
 
             Console.WriteLine("Entered management console. Type commands after '>' and press return to submit.");
             Console.WriteLine("Type '?' for help. Type 'q' to quit.");
@@ -185,7 +213,7 @@ namespace trhvmgr.Interactive
                         break;
                 }
                 exit = false;
-            }
-        }
-    }
-}
+            } // End while
+        } // End main
+    } // End class
+} // End namespace

@@ -5,11 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 using trhvmgr.Plugs;
+using trhvmgr.Interactive.Plugs;
 using trhvmgr.Lib;
 using System.Net;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using Newtonsoft.Json;
+using System.Management.Automation;
 
 namespace trhvmgr.Interactive
 {
@@ -150,7 +152,7 @@ namespace trhvmgr.Interactive
                 for (int i = 0; i < doc["templates"].Count(); i++)
                     Console.WriteLine($"[{ i }] { doc["templates"][i]["name"] }");
                 var config = doc["templates"][GetSelectedIndex()];
-                PSWrapper.Execute(server, config, name, vhdpath, vmswitch);
+                PSWrapper.Execute(server, config, PsStreamEventHandlers.DefaultHandlers, name, vhdpath, vmswitch);
             }
         }
 
@@ -159,7 +161,31 @@ namespace trhvmgr.Interactive
         {
             string server = Dns.GetHostName();
             if (tokens.Length == 2) server = tokens[1];
-            Interface.BringOnline(server);
+            Console.WriteLine("Waking up...");
+            Interface.BringOnline(server, PsStreamEventHandlers.DefaultHandlers);
+            Console.WriteLine("Restarting vmms...");
+            Interface.RestartService(server, PsStreamEventHandlers.DefaultHandlers);
+        }
+
+        [CommandInfo(0, 1, ParameterSyntax = "[HostName]", HelpText = "Interactive applet to add a switch")]
+        public static void newvmswitch(string[] tokens)
+        {
+            string server = Dns.GetHostName();
+            if (tokens.Length == 2) server = tokens[1];
+            Console.Write("Name: ");
+            string name = Console.ReadLine();
+            Console.WriteLine("Choose an adapter:");
+            var adapters = NetAdapter.GetNetAdapter(server);
+            for (int i = 0; i < adapters.Count; i++)
+                Console.WriteLine($"[{i}] ({ adapters[i].Members["Name"].Value }) { adapters[i].Members["InterfaceDescription"].Value }");
+            var ada = adapters[GetSelectedIndex()].Members["InterfaceDescription"].Value.ToString();
+            PSWrapper.Execute(server, (ps) => {
+                return ps.AddCommand("New-VMSwitch")
+                    .AddParameter("Name", name)
+                    .AddParameter("NetAdapterInterfaceDescription", ada)
+                    .AddParameter("AllowManagementOS", true)
+                .Invoke();
+            }, PsStreamEventHandlers.DefaultHandlers);
         }
     }
 }

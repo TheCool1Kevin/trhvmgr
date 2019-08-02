@@ -5,8 +5,9 @@ using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Text;
 using System.Threading.Tasks;
+using trhvmgr.Plugs;
 
-namespace trhvmgr.Plugs
+namespace trhvmgr.Interactive.Plugs
 {
     /// <summary>
     /// Interface for netadapter Powershell Module,

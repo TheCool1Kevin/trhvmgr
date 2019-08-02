@@ -120,6 +120,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Lib\BackgroundWorkerQueue.cs" />
+    <Compile Include="Lib\DummyWorker.cs" />
     <Compile Include="Lib\NetworkUtil.cs" />
     <Compile Include="Lib\NetworkWorkerObject.cs" />
     <Compile Include="Lib\PSWrapper.cs" />
@@ -140,9 +141,7 @@
     <Compile Include="Objects\HostComputer.cs" />
     <Compile Include="Objects\MasterTreeNode.cs" />
     <Compile Include="Objects\VirtualMachine.cs" />
-    <Compile Include="Plugs\HyperV.cs" />
     <Compile Include="Plugs\Interface.cs" />
-    <Compile Include="Plugs\NetAdapter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerProperties.cs">
@@ -167,23 +166,15 @@
     <Compile Include="UI\ColorComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UI\ColorMaskedTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="UI\ColorTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="UI\Invoke.cs" />
     <Compile Include="UI\ValidatingComboBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UI\ValidatingComboBox.Designer.cs">
       <DependentUpon>ValidatingComboBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\ValidatingMaskedTextbox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\ValidatingMaskedTextbox.Designer.cs">
-      <DependentUpon>ValidatingMaskedTextbox.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\ValidatingTextbox.cs">
       <SubType>UserControl</SubType>
@@ -225,9 +216,6 @@
     <EmbeddedResource Include="UI\ValidatingComboBox.resx">
       <DependentUpon>ValidatingComboBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\ValidatingMaskedTextbox.resx">
-      <DependentUpon>ValidatingMaskedTextbox.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UI\ValidatingTextbox.resx">
       <DependentUpon>ValidatingTextbox.cs</DependentUpon>
     </EmbeddedResource>
@@ -237,6 +225,7 @@
     <Content Include="Config\templates.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Config\commands.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -275,7 +264,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties Config_4templates_1json__JSONSchema="http://json-schema.org/draft-04/schema" />
+      <UserProperties Config_4commands_1json__JSONSchema="http://json-schema.org/draft-04/schema" Config_4templates_1json__JSONSchema="http://json-schema.org/draft-04/schema" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

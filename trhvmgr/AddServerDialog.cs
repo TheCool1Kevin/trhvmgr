@@ -61,10 +61,23 @@ namespace trhvmgr
 
             // Get VMs
             listBox1.Items.Clear();
-            Interface.GetVms(hostnameText.Text)?.ForEach(x =>
+            backgroundWorker = new BackgroundWorkerQueueDialog("Scanning for Virtual Machines...");
+            backgroundWorker.AppendTask("Getting machines...", DummyWorker.GetWorker(() =>
             {
-                listBox1.Items.Add(x.Name + " [" + x.Uuid.ToString().ToUpper() + "]");
-            });
+                try
+                {
+                    Interface.GetVms(hostnameText.Text)?.ForEach(x =>
+                    {
+                        ThreadManager.Invoke(this, listBox1, () =>
+                            listBox1.Items.Add(x.Name + " [" + x.Uuid.ToString().ToUpper() + "]"));
+                    });
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message, "Exception", MessageBoxButtons.OK);
+                }
+            }));
+            backgroundWorker.ShowDialog();
         }
 
         #endregion
@@ -74,7 +87,7 @@ namespace trhvmgr
         private void addbtn_Click(object sender, EventArgs e)
         {
             ValidateTexts();
-            if(hostnameText.IsValid == tribool.TRUE && ipText.IsValid == tribool.TRUE && macText.IsValid == tribool.TRUE)
+            if(hostnameText.IsValid == tribool.TRUE && ipText.IsValid == tribool.TRUE /*&& macText.IsValid == tribool.TRUE*/)
             {
                 this.DialogResult = DialogResult.OK;
                 SessionManager.Instance.Database.AddServer(new DbHostComputer { HostName = hostnameText.Text });

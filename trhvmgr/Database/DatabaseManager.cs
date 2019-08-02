@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Configuration;
 using trhvmgr.Objects;
 using trhvmgr.Plugs;
+using System.Windows.Forms;
 
 namespace trhvmgr.Database
 {
@@ -50,26 +51,35 @@ namespace trhvmgr.Database
                     Type = NodeType.HostComputer
                 };
                 // First, add all virtual machines associated with this host
-                foreach (var v in Interface.GetVms(h.HostName))
+                try
                 {
-                    var vnode = new MasterTreeNode
+                    var p = Interface.GetVms(h.HostName);
+                    foreach (var v in p)
                     {
-                        Name = v.Name,
-                        Host = v.Host,
-                        Uuid = v.Uuid.ToString().ToUpper(),
-                        Type = NodeType.VirtualMachines,
-                    };
-                    foreach (var vhd in v.VhdPath)
-                    {
-                        vnode.Children.Add(new MasterTreeNode
+                        var vnode = new MasterTreeNode
                         {
-                            Name = vhd,
+                            Name = v.Name,
                             Host = v.Host,
-                            Type = NodeType.VirtualHardDisks
-                        });
+                            Uuid = v.Uuid.ToString().ToUpper(),
+                            Type = NodeType.VirtualMachines,
+                        };
+                        foreach (var vhd in v.VhdPath)
+                        {
+                            vnode.Children.Add(new MasterTreeNode
+                            {
+                                Name = vhd,
+                                Host = v.Host,
+                                Type = NodeType.VirtualHardDisks
+                            });
+                        }
+                        root.Children.Add(vnode);
                     }
-                    root.Children.Add(vnode);
+                } catch(Exception e)
+                {
+                    MessageBox.Show(e.Message, "Exception", MessageBoxButtons.OK);
+                    return;
                 }
+                
                 // Then, add all virtual hard disks associated with this host
 
 
