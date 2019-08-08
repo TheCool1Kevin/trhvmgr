@@ -68,7 +68,7 @@ namespace trhvmgr.Lib
         /// <summary>
         /// WorkerDelegate passed down by BackgroundWorkerQueue.
         /// </summary>
-        public readonly WorkerDelegate d;
+        public WorkerDelegate d;
 
         /// <summary>
         /// Constructor for WorkerContext.

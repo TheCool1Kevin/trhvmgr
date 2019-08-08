@@ -38,6 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -51,7 +52,16 @@
   <PropertyGroup>
     <StartupObject>trhvmgr.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CredentialManagement, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CredentialManagement.1.0.2\lib\net35\CredentialManagement.dll</HintPath>
+    </Reference>
     <Reference Include="JsonConfig, Version=1.0.5359.16918, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\JsonConfig.1.0.0\lib\JsonConfig.dll</HintPath>
     </Reference>
@@ -115,6 +125,7 @@
     <Compile Include="Database\DatabaseManager.cs" />
     <Compile Include="Database\DatabaseWorkerObject.cs" />
     <Compile Include="Database\DatabaseWorkers.cs" />
+    <Compile Include="Database\DatabaseAttribute.cs" />
     <Compile Include="Database\LiteDataRow.cs" />
     <Compile Include="Database\LiteDataTable.cs">
       <SubType>Component</SubType>
@@ -140,6 +151,7 @@
     </Compile>
     <Compile Include="Objects\HostComputer.cs" />
     <Compile Include="Objects\MasterTreeNode.cs" />
+    <Compile Include="Objects\SerializableDbObject.cs" />
     <Compile Include="Objects\VirtualMachine.cs" />
     <Compile Include="Plugs\Interface.cs" />
     <Compile Include="Program.cs" />
@@ -225,6 +237,7 @@
     <Content Include="Config\templates.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="app.manifest" />
     <None Include="Config\commands.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

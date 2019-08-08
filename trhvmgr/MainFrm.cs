@@ -13,7 +13,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using trhvmgr.Database;
+using trhvmgr.Lib;
 using trhvmgr.Objects;
+using trhvmgr.UI;
 
 namespace trhvmgr
 {
@@ -30,10 +32,30 @@ namespace trhvmgr
             this.mainToolstrip.Renderer = new MainFormToolStripRenderer();
             // Database
             databaseManager = SessionManager.Instance.Database;
-            RefreshCollections();
         }
 
         #region Tree Code
+
+        private void RefreshCollections()
+        {
+            try
+            {
+                databaseManager.RegenerateTree();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Exception", MessageBoxButtons.OK);
+                return;
+            }
+            RefreshUI();
+        }
+
+        private void RefreshUI()
+        {
+            collectionsList.Items.Clear();
+            databaseManager.GetCollectionNames().ToList().ForEach(x => collectionsList.Items.Add(x));
+            treeListView.SetObjects(databaseManager.TreeNodes);
+        }
 
         private void SetupMasterTree()
         {
@@ -70,6 +92,26 @@ namespace trhvmgr
             this.treeListView.Refresh();
         }
 
+        private ContextMenuStrip GetContextMenu(object model, OLVColumn col)
+        {
+            if(model is MasterTreeNode)
+            {
+                var node = model as MasterTreeNode;
+                if(node.Type == NodeType.HostComputer)
+                {
+                    var menu = new ContextMenuStrip();
+                    menu.Items.Add("Delete").Click += (o, e) =>
+                        {
+                            SessionManager.Instance.Database.RemoveServer(node.Name);
+                            RefreshUI();
+                        };
+                    return menu;
+                }
+            }
+
+            return null;
+        }
+
         #endregion
 
         #region UI Events
@@ -84,6 +126,9 @@ namespace trhvmgr
 
             // Initialize tree
             SetupMasterTree();
+            var backgroundWorker = new BackgroundWorkerQueueDialog("Loading servers...", ProgressBarStyle.Marquee);
+            backgroundWorker.AppendTask("Connecting machines...", DummyWorker.GetWorker(RefreshCollections));
+            backgroundWorker.ShowDialog(FormStartPosition.CenterScreen);
         }
 
         private void collectionsList_SelectedIndexChanged(object sender, EventArgs e)
@@ -126,6 +171,11 @@ namespace trhvmgr
         {
             if (e.TabPageIndex == 1)
                 MessageBox.Show("Unstable feature!", "", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+        }
+
+        private void treeListView_CellRightClick(object sender, CellRightClickEventArgs e)
+        {
+            e.MenuStrip = this.GetContextMenu(e.Model, e.Column);
         }
 
         #endregion
@@ -264,14 +314,6 @@ namespace trhvmgr
                 databaseManager.GetCollection(collectionsList.SelectedItem.ToString()).Delete(((LiteDataRow)e.Row).UnderlyingValue["_id"]);
             }
             RefreshCollections();
-        }
-
-        private void RefreshCollections()
-        {
-            databaseManager.RegenerateTree();
-            collectionsList.Items.Clear();
-            databaseManager.GetCollectionNames().ToList().ForEach(x => collectionsList.Items.Add(x));
-            treeListView.SetObjects(databaseManager.TreeNodes);
         }
 
         private void RunQuery(string query)

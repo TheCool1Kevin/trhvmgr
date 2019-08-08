@@ -93,7 +93,7 @@ namespace trhvmgr.UI
 
         private bool _enabled = true;
         [Description("Enabled"), Category("Label")]
-        public bool Enabled
+        public new bool Enabled
         {
             get
             {

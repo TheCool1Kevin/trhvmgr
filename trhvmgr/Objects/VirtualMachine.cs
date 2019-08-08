@@ -1,9 +1,6 @@
 ﻿using LiteDB;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using trhvmgr.Database;
 
 namespace trhvmgr.Objects
 {
@@ -15,16 +12,27 @@ namespace trhvmgr.Objects
         DEPLOY
     };
 
-    public class VirtualMachine
+    public class VirtualMachine : ISerializableDbObject<DbVirtualMachine>
     {
         public string Name { get; set; }
         public string Host { get; set; }
         public string[] VhdPath { get; set; }
         public Guid Uuid { get; set; }
         public VirtualMachineType Type { get; set; }
+
+        public DbVirtualMachine GetDbObject()
+        {
+            return new DbVirtualMachine
+            {
+                Host = Host,
+                Uuid = Uuid,
+                VmType = (int) Type
+            };
+        }
     }
 
-    public class DbVirtualMachine
+    [Database("vms")]
+    public class DbVirtualMachine : IDbObject
     {
         public string Host { get; set; }
         [BsonId]

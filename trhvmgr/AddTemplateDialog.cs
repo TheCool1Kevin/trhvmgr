@@ -77,14 +77,28 @@ namespace trhvmgr
             });
 
             // Get virtual machines
-            foreach (var s in hostComputers)
-                foreach (var vm in Interface.GetVms(s.HostName))
-                    if (vm.Type == VirtualMachineType.BASE)
-                        virtualMachines.Add(vm);
-            virtualMachines.ForEach(x =>
+            backgroundWorker = new BackgroundWorkerQueueDialog("Scanning for Virtual Machines...", ProgressBarStyle.Marquee);
+            backgroundWorker.AppendTask("Getting machines...", DummyWorker.GetWorker(() =>
             {
-                baseComboBox.ComboBox.Items.Add(x.Name + " [" + x.Host + "]");
-            });
+                try
+                {
+                    foreach (var s in hostComputers)
+                        foreach (var vm in Interface.GetVms(s.HostName))
+                            if (vm.Type == VirtualMachineType.BASE)
+                                virtualMachines.Add(vm);
+                    virtualMachines.ForEach(x =>
+                    {
+                        ThreadManager.Invoke(this, baseComboBox, () => 
+                            baseComboBox.ComboBox.Items.Add(x.Name + " [" + x.Host + "]")
+                        );
+                    });
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK);
+                }
+            }));
+            backgroundWorker.ShowDialog();
 
             // Make all default selected indicies 0
             //serverComboBox.SelectedIndex = 0;

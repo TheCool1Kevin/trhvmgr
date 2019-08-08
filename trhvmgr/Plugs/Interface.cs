@@ -64,8 +64,10 @@ namespace trhvmgr.Plugs
                     Uuid = (Guid)m.Members["VMId"].Value,
                     VhdPath = Array.ConvertAll(PSWrapper.Execute(hostName, (ps) =>
                     {
-                        ps.AddStatement().AddScript("Get-VMHardDiskDrive -VM $input");
-                        return ps.Invoke(new List<PSObject> { m });
+                        return ps.AddCommand("Get-VM")
+                            .AddParameter("Id", m.Members["VMId"].Value)
+                            .AddCommand("Get-VMHardDiskDrive")
+                            .Invoke();
                     }).ToArray(), (x) => { return x.Members["Path"].Value.ToString(); }),
                     Type = VirtualMachineType.BASE
                 });

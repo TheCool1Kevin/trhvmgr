@@ -28,8 +28,15 @@ namespace trhvmgr
 
         #region Private Methods
 
-        private void ValidateTexts()
+        private string _hn_cache = null;
+        private List<VirtualMachine> vms = null;
+
+        private void ValidateTexts(bool flushCache = false)
         {
+            // Clean!
+            vms = null;
+            if (flushCache) _hn_cache = null;
+
             // A clean alternative way to run consecutive network events
             BackgroundWorkerQueueDialog backgroundWorker = new BackgroundWorkerQueueDialog("Retrieving Network Information");
             backgroundWorker.AppendTask("Starting...", NetworkWorkers.GetStarterWorker(new NetworkWorkerObject
@@ -60,13 +67,17 @@ namespace trhvmgr
                     tribool.FALSE : tribool.TRUE;
 
             // Get VMs
+            // Check if the vms in the cache are different
+            if (_hn_cache == hostnameText.Text) return;
             listBox1.Items.Clear();
-            backgroundWorker = new BackgroundWorkerQueueDialog("Scanning for Virtual Machines...");
+            backgroundWorker = new BackgroundWorkerQueueDialog("Scanning for Virtual Machines...", ProgressBarStyle.Marquee);
             backgroundWorker.AppendTask("Getting machines...", DummyWorker.GetWorker(() =>
             {
                 try
                 {
-                    Interface.GetVms(hostnameText.Text)?.ForEach(x =>
+                    _hn_cache = hostnameText.Text;
+                    vms = Interface.GetVms(hostnameText.Text);
+                    vms?.ForEach(x =>
                     {
                         ThreadManager.Invoke(this, listBox1, () =>
                             listBox1.Items.Add(x.Name + " [" + x.Uuid.ToString().ToUpper() + "]"));
@@ -86,11 +97,21 @@ namespace trhvmgr
 
         private void addbtn_Click(object sender, EventArgs e)
         {
-            ValidateTexts();
+            ValidateTexts(true);
             if(hostnameText.IsValid == tribool.TRUE && ipText.IsValid == tribool.TRUE /*&& macText.IsValid == tribool.TRUE*/)
             {
                 this.DialogResult = DialogResult.OK;
-                SessionManager.Instance.Database.AddServer(new DbHostComputer { HostName = hostnameText.Text });
+                try
+                {
+                    SessionManager.Instance.Database.AddServer(
+                        new DbHostComputer { HostName = hostnameText.Text }, vms
+                    );
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK);
+                    this.DialogResult = DialogResult.Abort;
+                }
             }
             else
                 this.DialogResult = DialogResult.None;

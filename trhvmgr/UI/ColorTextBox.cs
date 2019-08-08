@@ -11,14 +11,13 @@ namespace trhvmgr.UI
     public class ColorTextBox : Panel
     {
         private TextBox textBox;
-        private bool focusedAlways = false;
 
         /// <summary>
         /// Color of border.
         /// </summary>
         public Color BorderColor { get; set; }
 
-        public string Text
+        public override string Text
         {
             get { return textBox.Text; }
             set { textBox.Text = value; }

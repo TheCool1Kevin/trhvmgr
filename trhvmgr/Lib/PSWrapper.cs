@@ -76,29 +76,58 @@ namespace trhvmgr.Lib
         {
             Runspace runspace = Interface.GetRunspace(host);
             runspace.Open();
-            using (PowerShell ps = PowerShell.Create())
+            bool status = false;
+
+            try
             {
-                ps.Runspace = runspace;
-                ps.AddStatement()
-                    .AddCommand(command);
-                if(parameters != null)
-                    ps.AddParameters(parameters);
-                res = ps.Invoke();
-                if (ps.HadErrors) return false;
+                using (PowerShell ps = PowerShell.Create())
+                {
+                    ps.Runspace = runspace;
+                    ps.AddStatement()
+                        .AddCommand(command);
+                    if (parameters != null)
+                        ps.AddParameters(parameters);
+                    res = ps.Invoke();
+                    status = !ps.HadErrors;
+                }
             }
-            return true;
+            catch(Exception e)
+            {
+                runspace.Close();
+                runspace.Dispose();
+                throw e;
+            }
+
+            runspace.Close();
+            runspace.Dispose();
+
+            return status;
         }
 
         public static Collection<PSObject> Execute(string host, Func<PowerShell, Collection<PSObject>> func, PsStreamEventHandlers handlers = null)
         {
             Runspace runspace = Interface.GetRunspace(host);
             runspace.Open();
-            using (PowerShell ps = PowerShell.Create())
+            Collection<PSObject> res = null;
+            try
             {
-                PsStreamEventHandlers.RegisterHandlers(ps, handlers);
-                ps.Runspace = runspace;
-                return func(ps);
+                using (PowerShell ps = PowerShell.Create())
+                {
+                    PsStreamEventHandlers.RegisterHandlers(ps, handlers);
+                    ps.Runspace = runspace;
+                    res = func(ps);
+                }
             }
+            catch(Exception e)
+            {
+                runspace.Close();
+                runspace.Dispose();
+                throw e;
+            }
+
+            runspace.Close();
+            runspace.Dispose();
+            return res;
         }
 
         public static void Execute(string host, JToken cfg, PsStreamEventHandlers handlers, params object[] args)

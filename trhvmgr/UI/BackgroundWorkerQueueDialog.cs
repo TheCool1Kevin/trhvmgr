@@ -13,15 +13,18 @@ namespace trhvmgr.UI
 {
     public partial class BackgroundWorkerQueueDialog : Form
     {
+
         private BackgroundWorkerQueue queue;
-        public BackgroundWorkerQueueDialog(string title)
+        public BackgroundWorkerQueueDialog(string title, ProgressBarStyle style = ProgressBarStyle.Blocks)
         {
             InitializeComponent();
             this.Text = title;
+            this.progressBar1.MarqueeAnimationSpeed = 30;
             queue = new BackgroundWorkerQueue(this.backgroundWorker1);
             backgroundWorker1.ProgressChanged += BackgroundWorker1_ProgressChanged;
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
+            progressBar1.Style = style;
             backgroundWorker1.RunWorkerCompleted += BackgroundWorker1_RunWorkerCompleted;
         }
 
@@ -44,6 +47,12 @@ namespace trhvmgr.UI
         public BackgroundWorkerQueue GetWorker()
         {
             return queue;
+        }
+
+        public DialogResult ShowDialog(FormStartPosition pos)
+        {
+            this.StartPosition = pos;
+            return this.ShowDialog();
         }
 
         #endregion

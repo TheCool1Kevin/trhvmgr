@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace trhvmgr.Objects
 {
@@ -25,5 +20,45 @@ namespace trhvmgr.Objects
 
         public NodeType Type { get; set; }
         public List<MasterTreeNode> Children = new List<MasterTreeNode>();
+
+        public void BurnChildren()
+        {
+            foreach (var c in Children) c.BurnChildren();
+            Children.Clear();
+        }
+
+        #region Public Static Methods
+
+        public static MasterTreeNode GetTreeNode(VirtualMachine v)
+        {
+            return new MasterTreeNode
+            {
+                Name = v.Name,
+                Host = v.Host,
+                Uuid = v.Uuid.ToString().ToUpper(),
+                Type = NodeType.VirtualMachines,
+            };
+        }
+
+        public static MasterTreeNode GetTreeNode(DbHostComputer h)
+        {
+            return new MasterTreeNode
+            {
+                Name = h.HostName,
+                Type = NodeType.HostComputer
+            };
+        }
+
+        public static MasterTreeNode GetTreeNode(string file, string host, NodeType type)
+        {
+            return new MasterTreeNode
+            {
+                Name = file,
+                Host = host,
+                Type = type
+            };
+        }
+
+        #endregion
     }
 }

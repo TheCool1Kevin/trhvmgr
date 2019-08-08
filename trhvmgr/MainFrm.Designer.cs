@@ -1,4 +1,5 @@
-﻿using System.Drawing.Drawing2D;
+﻿using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace trhvmgr
@@ -35,7 +36,8 @@ namespace trhvmgr
         {
             using (LinearGradientBrush b = new LinearGradientBrush(
                 e.AffectedBounds,
-                ColorTable.ToolStripGradientBegin,
+                //ColorTable.ToolStripGradientBegin,
+                Color.White,
                 ColorTable.ToolStripGradientMiddle,
                 LinearGradientMode.Vertical
             ))
@@ -97,7 +99,7 @@ namespace trhvmgr
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripSpringLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
@@ -114,7 +116,7 @@ namespace trhvmgr
             this.mainToolstrip.SuspendLayout();
             this.mainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.treeListView)).BeginInit();
-            this.statusStrip1.SuspendLayout();
+            this.statusStrip.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -146,7 +148,7 @@ namespace trhvmgr
             this.mainToolstrip.Location = new System.Drawing.Point(0, 24);
             this.mainToolstrip.Name = "mainToolstrip";
             this.mainToolstrip.Padding = new System.Windows.Forms.Padding(4);
-            this.mainToolstrip.Size = new System.Drawing.Size(600, 41);
+            this.mainToolstrip.Size = new System.Drawing.Size(718, 41);
             this.mainToolstrip.TabIndex = 1;
             // 
             // addServerToolButton
@@ -272,7 +274,7 @@ namespace trhvmgr
             this.mainMenu.Location = new System.Drawing.Point(0, 0);
             this.mainMenu.Name = "mainMenu";
             this.mainMenu.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.mainMenu.Size = new System.Drawing.Size(600, 24);
+            this.mainMenu.Size = new System.Drawing.Size(718, 24);
             this.mainMenu.TabIndex = 0;
             // 
             // fileToolStripMenuItem
@@ -324,7 +326,7 @@ namespace trhvmgr
             this.treeListView.ShowGroups = false;
             this.treeListView.ShowImagesOnSubItems = true;
             this.treeListView.ShowItemToolTips = true;
-            this.treeListView.Size = new System.Drawing.Size(590, 275);
+            this.treeListView.Size = new System.Drawing.Size(708, 323);
             this.treeListView.SmallImageList = this.imageList1;
             this.treeListView.TabIndex = 3;
             this.treeListView.TileSize = new System.Drawing.Size(16, 16);
@@ -336,6 +338,7 @@ namespace trhvmgr
             this.treeListView.UseTranslucentSelection = true;
             this.treeListView.View = System.Windows.Forms.View.Details;
             this.treeListView.VirtualMode = true;
+            this.treeListView.CellRightClick += new System.EventHandler<BrightIdeasSoftware.CellRightClickEventArgs>(this.treeListView_CellRightClick);
             this.treeListView.ItemActivate += new System.EventHandler(this.treeListView_ItemActivate);
             // 
             // olvColumn1
@@ -344,7 +347,7 @@ namespace trhvmgr
             this.olvColumn1.IsTileViewColumn = true;
             this.olvColumn1.Text = "Name";
             this.olvColumn1.UseInitialLetterForGroup = true;
-            this.olvColumn1.Width = 316;
+            this.olvColumn1.Width = 317;
             // 
             // olvColumn2
             // 
@@ -356,7 +359,7 @@ namespace trhvmgr
             // 
             this.olvColumn3.AspectName = "Uuid";
             this.olvColumn3.Text = "UUID";
-            this.olvColumn3.Width = 113;
+            this.olvColumn3.Width = 304;
             // 
             // imageList1
             // 
@@ -366,19 +369,19 @@ namespace trhvmgr
             this.imageList1.Images.SetKeyName(1, "computer.png");
             this.imageList1.Images.SetKeyName(2, "monitor_window.png");
             // 
-            // statusStrip1
+            // statusStrip
             // 
-            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel,
             this.toolStripSpringLabel,
             this.toolStripProgressBar});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 374);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 10, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(600, 22);
-            this.statusStrip1.TabIndex = 2;
-            this.statusStrip1.Text = "statusStrip1";
+            this.statusStrip.Location = new System.Drawing.Point(0, 422);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 10, 0);
+            this.statusStrip.Size = new System.Drawing.Size(718, 22);
+            this.statusStrip.TabIndex = 2;
+            this.statusStrip.Text = "statusStrip1";
             // 
             // toolStripStatusLabel
             // 
@@ -389,7 +392,7 @@ namespace trhvmgr
             // toolStripSpringLabel
             // 
             this.toolStripSpringLabel.Name = "toolStripSpringLabel";
-            this.toolStripSpringLabel.Size = new System.Drawing.Size(431, 17);
+            this.toolStripSpringLabel.Size = new System.Drawing.Size(549, 17);
             this.toolStripSpringLabel.Spring = true;
             // 
             // toolStripProgressBar
@@ -408,7 +411,7 @@ namespace trhvmgr
             this.tabControl.Name = "tabControl";
             this.tabControl.Padding = new System.Drawing.Point(6, 7);
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(600, 309);
+            this.tabControl.Size = new System.Drawing.Size(718, 357);
             this.tabControl.TabIndex = 4;
             this.tabControl.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl_Selected);
             // 
@@ -419,7 +422,7 @@ namespace trhvmgr
             this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
-            this.tabPage1.Size = new System.Drawing.Size(592, 275);
+            this.tabPage1.Size = new System.Drawing.Size(710, 323);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Master Directory";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -433,7 +436,7 @@ namespace trhvmgr
             this.tabPage2.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(2);
-            this.tabPage2.Size = new System.Drawing.Size(592, 275);
+            this.tabPage2.Size = new System.Drawing.Size(710, 323);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Database";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -463,8 +466,8 @@ namespace trhvmgr
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.dataGridView);
-            this.splitContainer1.Size = new System.Drawing.Size(588, 247);
-            this.splitContainer1.SplitterDistance = 196;
+            this.splitContainer1.Size = new System.Drawing.Size(706, 295);
+            this.splitContainer1.SplitterDistance = 235;
             this.splitContainer1.SplitterWidth = 3;
             this.splitContainer1.TabIndex = 3;
             // 
@@ -475,7 +478,7 @@ namespace trhvmgr
             this.collectionsList.Location = new System.Drawing.Point(0, 13);
             this.collectionsList.Margin = new System.Windows.Forms.Padding(2);
             this.collectionsList.Name = "collectionsList";
-            this.collectionsList.Size = new System.Drawing.Size(196, 234);
+            this.collectionsList.Size = new System.Drawing.Size(235, 282);
             this.collectionsList.TabIndex = 3;
             this.collectionsList.SelectedIndexChanged += new System.EventHandler(this.collectionsList_SelectedIndexChanged);
             // 
@@ -497,7 +500,7 @@ namespace trhvmgr
             this.dataGridView.Margin = new System.Windows.Forms.Padding(2);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowTemplate.Height = 24;
-            this.dataGridView.Size = new System.Drawing.Size(389, 247);
+            this.dataGridView.Size = new System.Drawing.Size(468, 295);
             this.dataGridView.TabIndex = 0;
             this.dataGridView.CellValuePushed += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView_CellValuePushed);
             // 
@@ -508,7 +511,7 @@ namespace trhvmgr
             this.panel1.Location = new System.Drawing.Point(2, 2);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(588, 24);
+            this.panel1.Size = new System.Drawing.Size(706, 24);
             this.panel1.TabIndex = 6;
             // 
             // queryText
@@ -518,7 +521,7 @@ namespace trhvmgr
             this.queryText.Location = new System.Drawing.Point(45, 2);
             this.queryText.Margin = new System.Windows.Forms.Padding(2);
             this.queryText.Name = "queryText";
-            this.queryText.Size = new System.Drawing.Size(544, 20);
+            this.queryText.Size = new System.Drawing.Size(662, 20);
             this.queryText.TabIndex = 4;
             this.queryText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.queryText_KeyDown);
             // 
@@ -527,11 +530,12 @@ namespace trhvmgr
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Menu;
-            this.ClientSize = new System.Drawing.Size(600, 396);
+            this.ClientSize = new System.Drawing.Size(718, 444);
             this.Controls.Add(this.tabControl);
-            this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.mainToolstrip);
             this.Controls.Add(this.mainMenu);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mainMenu;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MainFrm";
@@ -543,8 +547,8 @@ namespace trhvmgr
             this.mainMenu.ResumeLayout(false);
             this.mainMenu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.treeListView)).EndInit();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
             this.tabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
@@ -577,7 +581,7 @@ namespace trhvmgr
         private BrightIdeasSoftware.OLVColumn olvColumn1;
         private BrightIdeasSoftware.OLVColumn olvColumn2;
         private BrightIdeasSoftware.OLVColumn olvColumn3;
-        private StatusStrip statusStrip1;
+        private StatusStrip statusStrip;
         private ToolStripStatusLabel toolStripStatusLabel;
         private ToolStripProgressBar toolStripProgressBar;
         private ToolStripStatusLabel toolStripSpringLabel;
