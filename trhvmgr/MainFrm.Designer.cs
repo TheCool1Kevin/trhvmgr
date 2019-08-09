@@ -113,6 +113,8 @@ namespace trhvmgr
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.queryText = new System.Windows.Forms.TextBox();
+            this.toolBtnRefreshCol = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.mainToolstrip.SuspendLayout();
             this.mainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.treeListView)).BeginInit();
@@ -143,7 +145,9 @@ namespace trhvmgr
             this.toolStripSeparator2,
             this.toolStripButton3,
             this.toolStripButton5,
-            this.toolStripButton4});
+            this.toolStripButton4,
+            this.toolStripSeparator3,
+            this.toolBtnRefreshCol});
             this.mainToolstrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.mainToolstrip.Location = new System.Drawing.Point(0, 24);
             this.mainToolstrip.Name = "mainToolstrip";
@@ -525,6 +529,21 @@ namespace trhvmgr
             this.queryText.TabIndex = 4;
             this.queryText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.queryText_KeyDown);
             // 
+            // toolBtnRefreshCol
+            // 
+            this.toolBtnRefreshCol.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolBtnRefreshCol.Image = ((System.Drawing.Image)(resources.GetObject("toolBtnRefreshCol.Image")));
+            this.toolBtnRefreshCol.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolBtnRefreshCol.Name = "toolBtnRefreshCol";
+            this.toolBtnRefreshCol.Size = new System.Drawing.Size(29, 30);
+            this.toolBtnRefreshCol.Text = "Refresh List";
+            this.toolBtnRefreshCol.Click += new System.EventHandler(this.toolBtnRefreshCol_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 33);
+            // 
             // MainFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -604,5 +623,7 @@ namespace trhvmgr
         private Panel panel1;
         private ImageList imageList1;
         private ListBox collectionsList;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripButton toolBtnRefreshCol;
     }
 }

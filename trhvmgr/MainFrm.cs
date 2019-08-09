@@ -200,6 +200,13 @@ namespace trhvmgr
             treeListView.SetObjects(databaseManager.TreeNodes);
         }
 
+        private void toolBtnRefreshCol_Click(object sender, EventArgs e)
+        {
+            var backgroundWorker = new BackgroundWorkerQueueDialog("Loading servers...", ProgressBarStyle.Marquee);
+            backgroundWorker.AppendTask("Connecting machines...", DummyWorker.GetWorker(RefreshCollections));
+            backgroundWorker.ShowDialog();
+        }
+
         #endregion
 
         // TODO: Database code really broken :(

@@ -9,5 +9,10 @@ namespace trhvmgr.Lib
             action.Invoke();
             return ctx;
         };
+
+        public static Func<WorkerContext, WorkerContext> GetWorker(Func<WorkerContext, WorkerContext> action) => (ctx) =>
+        {
+            return action.Invoke(ctx);
+        };
     }
 }

@@ -58,7 +58,7 @@ namespace trhvmgr.Lib
         /// Status code from the previous task. Use non-standard
         /// status codes at your own risk.
         /// </summary>
-        public int s;
+        public StatusCode s;
         
         /// <summary>
         /// Object passed down from previous task.
@@ -77,7 +77,7 @@ namespace trhvmgr.Lib
         /// status codes at your own risk.</param>
         /// <param name="obj">Object passed down from previous task; must be ICloneable.</param>
         /// <param name="del">WorkerDelegate passed down by BackgroundWorkerQueue.</param>
-        public WorkerContext(int status, ICloneable obj, WorkerDelegate del)
+        public WorkerContext(StatusCode status, ICloneable obj, WorkerDelegate del)
         {
             s = status;
             o = obj;
@@ -107,7 +107,7 @@ namespace trhvmgr.Lib
 
         private void _w_DoWork(object sender, DoWorkEventArgs e)
         {
-            WorkerContext res = new WorkerContext((int)StatusCode.OK, null, new WorkerDelegate(_w));
+            WorkerContext res = new WorkerContext(StatusCode.OK, null, new WorkerDelegate(_w));
             for (_i = 0; _i < _ntasks; _i++)
             {
                 _w.ReportProgress(0);

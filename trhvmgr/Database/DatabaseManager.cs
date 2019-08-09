@@ -44,7 +44,16 @@ namespace trhvmgr.Database
             foreach (var h in hosts.FindAll())
             {
                 MasterTreeNode root = null;
-                root = this.GetRootTreeNode(h, Interface.GetVms(h.HostName));
+                var vm = new List<VirtualMachine>();
+                try
+                {
+                    vm = Interface.GetVms(h.HostName);
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK);
+                }
+                root = this.GetRootTreeNode(h, vm);
                 // Finally, add this host to our tree
                 if(root != null) TreeNodes.Add(root);
             }

@@ -57,7 +57,7 @@ namespace trhvmgr
             var bw = backgroundWorker.GetWorker();
             for (int i = 0; i < SessionManager.Instance.Database.GetServers().Count; i++)
             {
-                if (bw.ReturnedObjects[i * 3 + 2].s == (int)StatusCode.OK)
+                if (bw.ReturnedObjects[i * 3 + 2].s == StatusCode.OK)
                 {
                     hostComputers.Add(new HostComputer
                     {

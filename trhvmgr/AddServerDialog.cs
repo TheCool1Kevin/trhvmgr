@@ -31,7 +31,7 @@ namespace trhvmgr
         private string _hn_cache = null;
         private List<VirtualMachine> vms = null;
 
-        private void ValidateTexts(bool flushCache = false)
+        private bool ValidateTexts(bool flushCache = false)
         {
             // Clean!
             vms = null;
@@ -51,24 +51,45 @@ namespace trhvmgr
             var v = backgroundWorker.GetWorker();
 
             // Set fields, only if the returned object has text - therefore preserving whatever was typed beforehand
-            if (backgroundWorker.GetWorker().ReturnedObjects[1].s == (int)StatusCode.OK)
+            if (backgroundWorker.GetWorker().ReturnedObjects[1].s == StatusCode.OK)
                 ipText.Text = ((NetworkWorkerObject)backgroundWorker.GetWorker().ReturnedObjects[1].o).IpAddress;
-            if (backgroundWorker.GetWorker().ReturnedObjects[2].s == (int)StatusCode.OK)
+            if (backgroundWorker.GetWorker().ReturnedObjects[2].s == StatusCode.OK)
                 macText.Text = ((NetworkWorkerObject)backgroundWorker.GetWorker().ReturnedObjects[2].o).MacAddress;
 
             // If something's empty/failed, let user know
             hostnameText.IsValid = (string.IsNullOrWhiteSpace(hostnameText.Text)) ?
                     tribool.FALSE : tribool.TRUE;
             ipText.IsValid = (string.IsNullOrWhiteSpace(ipText.Text) ||
-                backgroundWorker.GetWorker().ReturnedObjects[1].s != (int)StatusCode.OK) ?
+                backgroundWorker.GetWorker().ReturnedObjects[1].s != StatusCode.OK) ?
                     tribool.FALSE : tribool.TRUE;
             macText.IsValid = (string.IsNullOrWhiteSpace(macText.Text) ||
-                backgroundWorker.GetWorker().ReturnedObjects[2].s != (int)StatusCode.OK) ?
+                backgroundWorker.GetWorker().ReturnedObjects[2].s != StatusCode.OK) ?
                     tribool.FALSE : tribool.TRUE;
+
+            // Check if the PowerShell thing is on...
+            backgroundWorker = new BackgroundWorkerQueueDialog("Checking for PSRemoting and WinRM...", ProgressBarStyle.Marquee);
+            backgroundWorker.AppendTask("Pinging...", DummyWorker.GetWorker((ctx) =>
+            {
+                try
+                {
+                    Interface.BringOnline(hostnameText.Text);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message, "Exception", MessageBoxButtons.OK);
+                    ctx.s = StatusCode.FAILED;
+                    return ctx;
+                }
+                ctx.s = StatusCode.OK;
+                return ctx;
+            }));
+            backgroundWorker.ShowDialog();
+            if (backgroundWorker.GetWorker().ReturnedObjects[0].s != StatusCode.OK)
+                return false;
 
             // Get VMs
             // Check if the vms in the cache are different
-            if (_hn_cache == hostnameText.Text) return;
+            if (_hn_cache == hostnameText.Text) return true;
             listBox1.Items.Clear();
             backgroundWorker = new BackgroundWorkerQueueDialog("Scanning for Virtual Machines...", ProgressBarStyle.Marquee);
             backgroundWorker.AppendTask("Getting machines...", DummyWorker.GetWorker(() =>
@@ -89,6 +110,7 @@ namespace trhvmgr
                 }
             }));
             backgroundWorker.ShowDialog();
+            return true;
         }
 
         #endregion
@@ -97,8 +119,7 @@ namespace trhvmgr
 
         private void addbtn_Click(object sender, EventArgs e)
         {
-            ValidateTexts(true);
-            if(hostnameText.IsValid == tribool.TRUE && ipText.IsValid == tribool.TRUE /*&& macText.IsValid == tribool.TRUE*/)
+            if(ValidateTexts(true) && hostnameText.IsValid == tribool.TRUE && ipText.IsValid == tribool.TRUE)
             {
                 this.DialogResult = DialogResult.OK;
                 try

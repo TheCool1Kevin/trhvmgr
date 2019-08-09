@@ -20,7 +20,7 @@ namespace trhvmgr.Lib
         /// <returns>Function delegate.</returns>
         public static Func<WorkerContext, WorkerContext> GetStarterWorker(NetworkWorkerObject n) => (ctx) =>
         {
-            return new WorkerContext((int)StatusCode.OK, n, ctx.d);
+            return new WorkerContext(StatusCode.OK, n, ctx.d);
         };
 
         /// <summary>
@@ -33,19 +33,19 @@ namespace trhvmgr.Lib
             try
             {
                 // If the previous did not return OK, fail.
-                if (ctx.s != (int)StatusCode.OK) throw new Exception();
+                if (ctx.s != StatusCode.OK) throw new Exception();
                 // Get IP from hostname
                 string server = ((NetworkWorkerObject)ctx.o).HostName;
                 IPHostEntry hostEntry = Dns.GetHostEntry(server);
                 ((NetworkWorkerObject)ctx.o).IpAddress = hostEntry.AddressList.Where((x) => x.AddressFamily == AddressFamily.InterNetwork).ToArray()[0].ToString();
-                ctx.s = (int)StatusCode.OK;
+                ctx.s = StatusCode.OK;
                 return ctx;
             }
             catch (Exception)
             {
                 // Set to null and fail
                 ((NetworkWorkerObject)ctx.o).IpAddress = null;
-                ctx.s = (int)StatusCode.FAILED;
+                ctx.s = StatusCode.FAILED;
                 return ctx;
             }
         };
@@ -60,7 +60,7 @@ namespace trhvmgr.Lib
             try
             {
                 // If the previous did not return OK, fail.
-                if (ctx.s != (int)StatusCode.OK) throw new Exception();
+                if (ctx.s != StatusCode.OK) throw new Exception();
                 // Get MAC Address
                 IPAddress ip;
                 IPAddress.TryParse(((NetworkWorkerObject)ctx.o).IpAddress, out ip);
@@ -70,14 +70,14 @@ namespace trhvmgr.Lib
                 mac = Regex.Replace(mac, ".{2}", "$0:");
                 mac = mac.TrimEnd(':');
                 ((NetworkWorkerObject)ctx.o).MacAddress = mac;
-                ctx.s = (int)StatusCode.OK;
+                ctx.s = StatusCode.OK;
                 return ctx;
             }
             catch (Exception)
             {
                 // Set to null and fail
                 ((NetworkWorkerObject)ctx.o).MacAddress = null;
-                ctx.s = (int)StatusCode.FAILED;
+                ctx.s = StatusCode.FAILED;
                 return ctx;
             }
         };

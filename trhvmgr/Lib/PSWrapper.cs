@@ -72,6 +72,11 @@ namespace trhvmgr.Lib
     /// </summary>
     public class PSWrapper
     {
+        private static Runspace GetCachedRunspace(string host)
+        {
+            return Interface.GetRunspace(host);
+        }
+
         public static bool Execute(string host, string command, out Collection<PSObject> res, Dictionary<string, string> parameters = null)
         {
             Runspace runspace = Interface.GetRunspace(host);
