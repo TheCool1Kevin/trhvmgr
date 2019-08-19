@@ -31,7 +31,7 @@ namespace trhvmgr
             this.mainMenu.Renderer = new MainFormMenuStripRenderer();
             this.mainToolstrip.Renderer = new MainFormToolStripRenderer();
             // Database
-            databaseManager = SessionManager.Instance.Database;
+            databaseManager = SessionManager.GetDatabase();
         }
 
         #region Tree Code
@@ -40,7 +40,7 @@ namespace trhvmgr
         {
             try
             {
-                databaseManager.RegenerateTree();
+                databaseManager.FlushCache();
             }
             catch (Exception e)
             {
@@ -52,9 +52,10 @@ namespace trhvmgr
 
         private void RefreshUI()
         {
-            collectionsList.Items.Clear();
-            databaseManager.GetCollectionNames().ToList().ForEach(x => collectionsList.Items.Add(x));
-            treeListView.SetObjects(databaseManager.TreeNodes);
+            ThreadManager.Invoke(this, collectionsList, () => collectionsList.Items.Clear());
+            databaseManager.GetCollectionNames().ToList().ForEach(x =>
+                ThreadManager.Invoke(this, collectionsList, () => collectionsList.Items.Add(x)));
+            treeListView.SetObjects(databaseManager.Directory.Values);
         }
 
         private void SetupMasterTree()
@@ -78,7 +79,18 @@ namespace trhvmgr
                 return imageList1.Images[0];
             };
 
-            this.treeListView.Roots = databaseManager.TreeNodes;
+            this.treeListView.UseCellFormatEvents = true;
+            this.treeListView.FormatCell += (o, e) =>
+            {
+                if(e.ColumnIndex == this.olvColumn1.Index)
+                {
+                    MasterTreeNode node = (MasterTreeNode) e.Model;
+                    if (node.VmType?.Value == VirtualMachineType.BASE)
+                        e.SubItem.Font = new Font(e.SubItem.Font, FontStyle.Bold);
+                }
+            };
+
+            this.treeListView.Roots = databaseManager.Directory.Values;
 
             // TODO: High DPI Awareness
             TreeListView.TreeRenderer renderer = this.treeListView.TreeColumnRenderer;
@@ -97,18 +109,40 @@ namespace trhvmgr
             if(model is MasterTreeNode)
             {
                 var node = model as MasterTreeNode;
-                if(node.Type == NodeType.HostComputer)
+                var menu = new ContextMenuStrip();
+                if (node.Type == NodeType.HostComputer)
                 {
-                    var menu = new ContextMenuStrip();
                     menu.Items.Add("Delete").Click += (o, e) =>
                         {
-                            SessionManager.Instance.Database.RemoveServer(node.Name);
+                            databaseManager.RemoveServer(node.Name);
                             RefreshUI();
                         };
                     return menu;
                 }
+                else if(node.Type == NodeType.VirtualMachines)
+                {
+                    if (node.VmType.Value == VirtualMachineType.BASE)
+                    {
+                        var menuItem1 = menu.Items.Add("Unset as Base");
+                        ((ToolStripMenuItem)menuItem1).Checked = true;
+                        menuItem1.Click += (o, e) =>
+                        {
+                            databaseManager.SetVmType(DbVirtualMachine.FromTreeNode(node), VirtualMachineType.NONE);
+                            RefreshUI();
+                        };
+                    }
+                    else
+                    {
+                        menu.Items.Add("Set as Base").Click += (o, e) =>
+                        {
+                            databaseManager.SetVmType(DbVirtualMachine.FromTreeNode(node), VirtualMachineType.BASE);
+                            RefreshUI();
+                        };
+                    }
+                    return menu;
+                }
+                menu = null;
             }
-
             return null;
         }
 
@@ -185,19 +219,19 @@ namespace trhvmgr
         private void addServerToolButton_Click(object sender, EventArgs e)
         {
             new AddServerDialog().ShowDialog();
-            treeListView.SetObjects(databaseManager.TreeNodes);
+            RefreshUI();
         }
 
         private void addTemplateToolButton_Click(object sender, EventArgs e)
         {
             new AddTemplateDialog().ShowDialog();
-            treeListView.SetObjects(databaseManager.TreeNodes);
+            RefreshUI();
         }
 
         private void addVhdToolButton_Click(object sender, EventArgs e)
         {
             new AddVhdDialog().ShowDialog();
-            treeListView.SetObjects(databaseManager.TreeNodes);
+            RefreshUI();
         }
 
         private void toolBtnRefreshCol_Click(object sender, EventArgs e)
@@ -205,6 +239,11 @@ namespace trhvmgr
             var backgroundWorker = new BackgroundWorkerQueueDialog("Loading servers...", ProgressBarStyle.Marquee);
             backgroundWorker.AppendTask("Connecting machines...", DummyWorker.GetWorker(RefreshCollections));
             backgroundWorker.ShowDialog();
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new AppSettingsDialog().ShowDialog();
         }
 
         #endregion

@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Windows.Forms;
+using trhvmgr.Properties;
+using trhvmgr.UI;
 
 namespace trhvmgr
 {
@@ -16,6 +16,10 @@ namespace trhvmgr
         {
             // Initialize session
             SessionManager.Instance.InitializeDatabase();
+            SettingsAttribute.SetAttribute("Setting",
+                new DisplayNameAttribute("Some text"),
+                new DescriptionAttribute("This is a description"),
+                new DefaultValueAttribute(Settings.Default.Properties["Setting"].DefaultValue));
 
             // Initialize application
             Application.EnableVisualStyles();

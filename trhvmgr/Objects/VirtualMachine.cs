@@ -1,5 +1,6 @@
 ﻿using LiteDB;
 using System;
+using System.Linq;
 using trhvmgr.Database;
 
 namespace trhvmgr.Objects
@@ -29,6 +30,17 @@ namespace trhvmgr.Objects
                 VmType = (int) Type
             };
         }
+
+        [Obsolete("Use explicit casts instead")]
+        public static VirtualMachine FromTreeNode(MasterTreeNode node) => (VirtualMachine) node;
+        public static explicit operator VirtualMachine(MasterTreeNode node) => new VirtualMachine
+        {
+            Host = node.Host,
+            Name = node.Name,
+            Uuid = Guid.Parse(node.Uuid),
+            Type = node.VmType == null ? VirtualMachineType.BASE : node.VmType.Value,
+            VhdPath = node.Children.Select(x => x.Name).ToArray()
+        };
     }
 
     [Database("vms")]
@@ -38,5 +50,14 @@ namespace trhvmgr.Objects
         [BsonId]
         public Guid Uuid { get; set; }
         public int VmType { get; set; }
+        
+        [Obsolete("Use explicit casts instead")]
+        public static DbVirtualMachine FromTreeNode(MasterTreeNode node) => (DbVirtualMachine) node;
+        public static explicit operator DbVirtualMachine(MasterTreeNode node) => new DbVirtualMachine
+        {
+            Host = node.Host,
+            Uuid = Guid.Parse(node.Uuid),
+            VmType = (int)(node.VmType == null ? VirtualMachineType.NONE : node.VmType.Value)
+        };
     }
 }

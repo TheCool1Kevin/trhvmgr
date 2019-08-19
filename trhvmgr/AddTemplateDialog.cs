@@ -38,14 +38,28 @@ namespace trhvmgr
 
         private void addbtn_Click(object sender, EventArgs e)
         {
+            bool isFormValid = false;
+            if (serverComboBox.SelectedIndex == -1)
+                serverComboBox.IsValid = tribool.FALSE;
+            if (baseComboBox.SelectedIndex == -1)
+                baseComboBox.IsValid = tribool.FALSE;
+            if (string.IsNullOrEmpty(vmTextbox.Text))
+                vmTextbox.IsValid = tribool.FALSE;
 
+            isFormValid = serverComboBox.IsValid == tribool.TRUE && baseComboBox.IsValid == tribool.TRUE && vmTextbox.IsValid == tribool.TRUE;
+
+            if (!isFormValid) this.DialogResult = DialogResult.None;
+            else
+            {
+
+            }
         }
 
         private void AddTemplateDialog_Load(object sender, EventArgs e)
         {
             // Get server information
             BackgroundWorkerQueueDialog backgroundWorker = new BackgroundWorkerQueueDialog("Retrieving Network Information");
-            foreach (var host in SessionManager.Instance.Database.GetServers())
+            foreach (var host in SessionManager.GetDatabase().GetServers())
             {
                 backgroundWorker.AppendTask("Validating " + host.HostName, NetworkWorkers.GetStarterWorker(
                     new NetworkWorkerObject { HostName = host.HostName }
@@ -55,7 +69,7 @@ namespace trhvmgr
             }
             backgroundWorker.ShowDialog();
             var bw = backgroundWorker.GetWorker();
-            for (int i = 0; i < SessionManager.Instance.Database.GetServers().Count; i++)
+            for (int i = 0; i < SessionManager.GetDatabase().GetServers().Count; i++)
             {
                 if (bw.ReturnedObjects[i * 3 + 2].s == StatusCode.OK)
                 {
@@ -80,12 +94,11 @@ namespace trhvmgr
             backgroundWorker = new BackgroundWorkerQueueDialog("Scanning for Virtual Machines...", ProgressBarStyle.Marquee);
             backgroundWorker.AppendTask("Getting machines...", DummyWorker.GetWorker(() =>
             {
+                SessionManager.GetDatabase().FlushCache();
                 try
                 {
-                    foreach (var s in hostComputers)
-                        foreach (var vm in Interface.GetVms(s.HostName))
-                            if (vm.Type == VirtualMachineType.BASE)
-                                virtualMachines.Add(vm);
+                    foreach (var vm in SessionManager.GetDatabase().GetVms(VirtualMachineType.BASE))
+                        virtualMachines.Add(vm);
                     virtualMachines.ForEach(x =>
                     {
                         ThreadManager.Invoke(this, baseComboBox, () => 
@@ -99,10 +112,6 @@ namespace trhvmgr
                 }
             }));
             backgroundWorker.ShowDialog();
-
-            // Make all default selected indicies 0
-            //serverComboBox.SelectedIndex = 0;
-            //baseComboBox.SelectedIndex = 0;
         }
 
         #endregion

@@ -124,7 +124,7 @@ namespace trhvmgr
                 this.DialogResult = DialogResult.OK;
                 try
                 {
-                    SessionManager.Instance.Database.AddServer(
+                    SessionManager.GetDatabase().AddServer(
                         new DbHostComputer { HostName = hostnameText.Text }, vms
                     );
                 }

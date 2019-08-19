@@ -14,7 +14,7 @@ namespace trhvmgr.Database
 {
     public class DatabaseManager : IDisposable
     {
-        public List<MasterTreeNode> TreeNodes { get; private set; }
+        public Dictionary<string, MasterTreeNode> Directory { get; private set; }
 
         private LiteDatabase _db;
 
@@ -22,7 +22,7 @@ namespace trhvmgr.Database
 
         public DatabaseManager(string connectionString)
         {
-            TreeNodes = new List<MasterTreeNode>();
+            Directory = new Dictionary<string, MasterTreeNode>();
             _db = new LiteDatabase(connectionString);
         }
 
@@ -35,9 +35,13 @@ namespace trhvmgr.Database
 
         #region Regenerative Methods
 
-        public void RegenerateTree()
+        /// <summary>
+        /// Exception safe cache flushing for virtual machines.
+        /// </summary>
+        public void FlushCache()
         {
-            TreeNodes.Clear();
+            foreach(var e in Directory) e.Value.BurnChildren();
+            Directory.Clear();
             var hosts = GetCollection<DbHostComputer>();
             var virts = GetCollection<DbVirtualMachine>();
             // Loop through each host
@@ -55,17 +59,18 @@ namespace trhvmgr.Database
                 }
                 root = this.GetRootTreeNode(h, vm);
                 // Finally, add this host to our tree
-                if(root != null) TreeNodes.Add(root);
+                if(root != null) Directory.Add(h.HostName, root);
             }
         }
 
         private MasterTreeNode GetRootTreeNode(DbHostComputer dbHost, List<VirtualMachine> cache)
         {
-            var root = MasterTreeNode.GetTreeNode(dbHost);
+            var root = (MasterTreeNode) dbHost;
             foreach (var v in cache)
             {
+                v.Type = GetVmType(v.Uuid);
                 // First, add all virtual machines associated with this host
-                var vnode = MasterTreeNode.GetTreeNode(v);
+                var vnode = (MasterTreeNode) v;
                 // Then, add all virtual hard disks associated with this host
                 foreach (var vhd in v.VhdPath)
                     vnode.Children.Add(MasterTreeNode.GetTreeNode(vhd, v.Host, NodeType.VirtualHardDisks));
@@ -92,29 +97,60 @@ namespace trhvmgr.Database
             if (cache == null)
                 cache = Interface.GetVms(dbHost.HostName);
             var root = this.GetRootTreeNode(dbHost, cache);
-            TreeNodes.Add(root);
+            Directory.Add(dbHost.HostName, root);
         }
 
         /// <summary>
         /// Removes a server from the database.
         /// This function is cache safe.
         /// </summary>
-        /// <param name="host">The unique hostname of the computer to remove.</param>
         public void RemoveServer(string host)
         {
+            if (!Directory.ContainsKey(host)) return;
             Delete<DbHostComputer, string>(x => x.HostName == host, x => x.HostName);
-            TreeNodes.Find(x => x.Name == host).BurnChildren();
-            TreeNodes.Remove(TreeNodes.Find(x => x.Name == host));
+            Directory[host].BurnChildren();
+            Directory.Remove(host);
         }
 
-        /// <summary>
-        /// Obtains a list of all servers from the database.
-        /// </summary>
         public List<DbHostComputer> GetServers()
         {
             List<DbHostComputer> ret = new List<DbHostComputer>();
-            var hosts = _db.GetCollection<DbHostComputer>("hosts");
+            var hosts = GetCollection<DbHostComputer>();
             return hosts.FindAll().ToList();
+        }
+
+        public void SetVmType(DbVirtualMachine vm, VirtualMachineType type)
+        {
+            vm.VmType = (int) type;
+            // !! It is important to normalize the strings with ToUpper()
+            var node = Directory[vm.Host].Children.Find(x => x.Uuid.ToUpper() == vm.Uuid.ToString().ToUpper());
+            node.VmType = new NodeVirtualMachineType(type);
+            Update(vm, x => x.Uuid);
+        }
+
+        public VirtualMachineType GetVmType(Guid id)
+        {
+            var vms = GetCollection<DbVirtualMachine>();
+            var col = vms.Find(x => x.Uuid == id);
+            if (col.Count() > 0)
+                return (VirtualMachineType)col.ElementAt(0).VmType;
+            return VirtualMachineType.NONE;
+        }
+
+        public List<VirtualMachine> GetVms(VirtualMachineType type)
+        {
+            List<VirtualMachine> res = new List<VirtualMachine>();
+            foreach (var c in Directory.Values)
+                c.Children.Where(x => x.VmType?.Value == type).ToList().ForEach(x => 
+                    res.Add(VirtualMachine.FromTreeNode(x)));
+            return res;
+        }
+
+        public List<VirtualMachine> GetVms(string host)
+        {
+            List<VirtualMachine> res = new List<VirtualMachine>();
+            Directory[host].Children.ForEach(x => res.Add(VirtualMachine.FromTreeNode(x)));
+            return res;
         }
 
         #endregion
@@ -156,7 +192,8 @@ namespace trhvmgr.Database
         {
             var col = GetCollection<T>();
             col.EnsureIndex(property);
-            col.Update(o);
+            if (!col.Update(o))
+                col.Insert(o);
         }
 
         /// <summary>
@@ -170,9 +207,8 @@ namespace trhvmgr.Database
         /// <param name="property">Ensure index expression</param>
         public void Update<T, K>(IEnumerable<T> o, Expression<Func<T, K>> property) where T : IDbObject
         {
-            var col = GetCollection<T>();
-            col.EnsureIndex(property);
-            col.Update(o);
+            foreach (T e in o)
+                Update(e, property);
         }
 
         public void Insert<T, K>(T o, Expression<Func<T, K>> property) where T : IDbObject

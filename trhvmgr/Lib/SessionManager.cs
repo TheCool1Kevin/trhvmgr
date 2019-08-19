@@ -35,6 +35,9 @@ namespace trhvmgr
         public DatabaseManager Database { get; private set; }
         public PSCredential PSCredential { get; private set; }
 
+        public static DatabaseManager GetDatabase() => Instance.Database;
+        public static PSCredential GetCredential() => Instance.PSCredential;
+
         #endregion
 
         #region Public Methods

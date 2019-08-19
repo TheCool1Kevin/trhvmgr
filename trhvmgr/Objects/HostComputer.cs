@@ -17,15 +17,6 @@ namespace trhvmgr.Objects
         {
             return new DbHostComputer { HostName = HostName };
         }
-
-        public MasterTreeNode GetTreeNode()
-        {
-            return new MasterTreeNode
-            {
-                Name = HostName,
-                Type = NodeType.HostComputer
-            };
-        }
     }
 
     [Database("hosts")]

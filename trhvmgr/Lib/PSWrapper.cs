@@ -77,6 +77,10 @@ namespace trhvmgr.Lib
             return Interface.GetRunspace(host);
         }
 
+        /// <summary>
+        /// Returns true on success.
+        /// </summary>
+        /// <exception cref="Exception">Throws exceptions</exception>
         public static bool Execute(string host, string command, out Collection<PSObject> res, Dictionary<string, string> parameters = null)
         {
             Runspace runspace = Interface.GetRunspace(host);
@@ -96,19 +100,20 @@ namespace trhvmgr.Lib
                     status = !ps.HadErrors;
                 }
             }
-            catch(Exception e)
+            catch(Exception)
             {
-                runspace.Close();
                 runspace.Dispose();
-                throw e;
+                throw;
             }
 
-            runspace.Close();
             runspace.Dispose();
-
             return status;
         }
 
+        /// <summary>
+        /// Returns a collection of Powershell objects, or null on failure.
+        /// </summary>
+        /// <exception cref="Exception">Throws exceptions</exception>
         public static Collection<PSObject> Execute(string host, Func<PowerShell, Collection<PSObject>> func, PsStreamEventHandlers handlers = null)
         {
             Runspace runspace = Interface.GetRunspace(host);
@@ -123,18 +128,20 @@ namespace trhvmgr.Lib
                     res = func(ps);
                 }
             }
-            catch(Exception e)
+            catch(Exception)
             {
-                runspace.Close();
                 runspace.Dispose();
-                throw e;
+                throw;
             }
 
-            runspace.Close();
             runspace.Dispose();
             return res;
         }
 
+        /// <summary>
+        /// Executes Powershell from special JSON instructions.
+        /// </summary>
+        /// <exception cref="Exception">Throws exceptions</exception>
         public static void Execute(string host, JToken cfg, PsStreamEventHandlers handlers, params object[] args)
         {
             PSObject vmid = null;

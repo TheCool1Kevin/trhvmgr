@@ -27,19 +27,21 @@ namespace trhvmgr.Plugs
 
         public static Runspace GetRunspace(string hostName)
         {
-            return GetRunspace(SessionManager.Instance.PSCredential, hostName);
+            return GetRunspace(SessionManager.GetCredential(), hostName);
         }
 
+        /// <exception cref="Exception">May throw exceptions</exception>
         public static void BringOnline(string hostName, PsStreamEventHandlers handlers = null)
         {
             using (PowerShell ps = PowerShell.Create())
             {
                 PsStreamEventHandlers.RegisterHandlers(ps, handlers);
-                var ret = ps.AddCommand("New-PSSession").AddParameter("ComputerName", hostName).AddParameter("Credential", SessionManager.Instance.PSCredential).Invoke();
+                var ret = ps.AddCommand("New-PSSession").AddParameter("ComputerName", hostName).AddParameter("Credential", SessionManager.GetCredential()).Invoke();
                 ps.AddCommand("Remove-PSSession").AddParameter("Session", ret).Invoke();
             }
         }
 
+        /// <exception cref="Exception">May throw exceptions</exception>
         public static void RestartService(string hostName, PsStreamEventHandlers handlers = null)
         {
             PSWrapper.Execute(hostName, (ps) => ps.AddCommand("Restart-Service").AddParameter("Name", "vmms").Invoke(), handlers);
@@ -49,6 +51,7 @@ namespace trhvmgr.Plugs
 
         #region Virtual Machine State Query
 
+        /// <exception cref="Exception">May throw exceptions</exception>
         public static List<VirtualMachine> GetVms(string hostName)
         {
             Collection<PSObject> objs = null;
@@ -69,7 +72,7 @@ namespace trhvmgr.Plugs
                             .AddCommand("Get-VMHardDiskDrive")
                             .Invoke();
                     }).ToArray(), (x) => { return x.Members["Path"].Value.ToString(); }),
-                    Type = VirtualMachineType.BASE
+                    Type = VirtualMachineType.NONE
                 });
             }
             return machines;

@@ -122,6 +122,12 @@
     <Compile Include="AddVhdDialog.Designer.cs">
       <DependentUpon>AddVhdDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="AppSettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AppSettingsDialog.Designer.cs">
+      <DependentUpon>AppSettingsDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Database\DatabaseManager.cs" />
     <Compile Include="Database\DatabaseWorkerObject.cs" />
     <Compile Include="Database\DatabaseWorkers.cs" />
@@ -135,6 +141,7 @@
     <Compile Include="Lib\NetworkUtil.cs" />
     <Compile Include="Lib\NetworkWorkerObject.cs" />
     <Compile Include="Lib\PSWrapper.cs" />
+    <Compile Include="UI\SettingsAttribute.cs" />
     <Compile Include="Lib\tribool.cs" />
     <Compile Include="Lib\NetworkWorkers.cs" />
     <Compile Include="MainFrm.cs">
@@ -162,7 +169,7 @@
     <Compile Include="ServerProperties.Designer.cs">
       <DependentUpon>ServerProperties.cs</DependentUpon>
     </Compile>
-    <Compile Include="SessionManager.cs" />
+    <Compile Include="Lib\SessionManager.cs" />
     <Compile Include="StartupDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -182,6 +189,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UI\Invoke.cs" />
+    <Compile Include="Lib\OverrideDescriptor.cs" />
     <Compile Include="UI\ValidatingComboBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -219,6 +227,9 @@
     <EmbeddedResource Include="ServerProperties.resx">
       <DependentUpon>ServerProperties.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AppSettingsDialog.resx">
+      <DependentUpon>AppSettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="StartupDialog.resx">
       <DependentUpon>StartupDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -254,12 +265,6 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Icons\icons8-stop-30.png" />
-    <None Include="Icons\icons8-resume-button-30.png" />
-    <None Include="Icons\icons8-pause-30.png" />
-    <Content Include="Icons\icons8-play-30.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
