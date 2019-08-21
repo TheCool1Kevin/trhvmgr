@@ -30,6 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddTemplateDialog));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.configComboBox = new trhvmgr.UI.ValidatingComboBox();
+            this.adapterComboBox = new trhvmgr.UI.ValidatingComboBox();
             this.serverComboBox = new trhvmgr.UI.ValidatingComboBox();
             this.baseComboBox = new trhvmgr.UI.ValidatingComboBox();
             this.cancelbtn = new System.Windows.Forms.Button();
@@ -40,6 +42,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.configComboBox);
+            this.groupBox1.Controls.Add(this.adapterComboBox);
             this.groupBox1.Controls.Add(this.serverComboBox);
             this.groupBox1.Controls.Add(this.baseComboBox);
             this.groupBox1.Controls.Add(this.cancelbtn);
@@ -49,10 +53,56 @@
             this.groupBox1.Location = new System.Drawing.Point(8, 8);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(8);
-            this.groupBox1.Size = new System.Drawing.Size(345, 139);
+            this.groupBox1.Size = new System.Drawing.Size(385, 194);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Template VM Properties";
+            // 
+            // configComboBox
+            // 
+            this.configComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.configComboBox.ButtonImage = ((System.Drawing.Image)(resources.GetObject("configComboBox.ButtonImage")));
+            this.configComboBox.ButtonTooltip = null;
+            this.configComboBox.ButtonTooltipTitle = "AAA";
+            this.configComboBox.ButtonVisible = false;
+            this.configComboBox.ErrorImage = null;
+            this.configComboBox.ErrorTooltip = null;
+            this.configComboBox.ErrorTooltipTitle = "";
+            this.configComboBox.IsValid = trhvmgr.Lib.tribool.NEUTRAL;
+            this.configComboBox.LabelAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.configComboBox.LabelAutoSize = false;
+            this.configComboBox.LabelText = "Configuration Template";
+            this.configComboBox.LabelWidth = 120;
+            this.configComboBox.Location = new System.Drawing.Point(10, 23);
+            this.configComboBox.Margin = new System.Windows.Forms.Padding(2);
+            this.configComboBox.Name = "configComboBox";
+            this.configComboBox.SelectedIndex = -1;
+            this.configComboBox.Size = new System.Drawing.Size(365, 21);
+            this.configComboBox.TabIndex = 11;
+            // 
+            // adapterComboBox
+            // 
+            this.adapterComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.adapterComboBox.ButtonImage = ((System.Drawing.Image)(resources.GetObject("adapterComboBox.ButtonImage")));
+            this.adapterComboBox.ButtonTooltip = null;
+            this.adapterComboBox.ButtonTooltipTitle = "AAA";
+            this.adapterComboBox.ButtonVisible = false;
+            this.adapterComboBox.ErrorImage = null;
+            this.adapterComboBox.ErrorTooltip = null;
+            this.adapterComboBox.ErrorTooltipTitle = "";
+            this.adapterComboBox.IsValid = trhvmgr.Lib.tribool.NEUTRAL;
+            this.adapterComboBox.LabelAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.adapterComboBox.LabelAutoSize = false;
+            this.adapterComboBox.LabelText = "Network Switch";
+            this.adapterComboBox.LabelWidth = 120;
+            this.adapterComboBox.Location = new System.Drawing.Point(10, 123);
+            this.adapterComboBox.Margin = new System.Windows.Forms.Padding(2);
+            this.adapterComboBox.Name = "adapterComboBox";
+            this.adapterComboBox.SelectedIndex = -1;
+            this.adapterComboBox.Size = new System.Drawing.Size(365, 21);
+            this.adapterComboBox.TabIndex = 10;
             // 
             // serverComboBox
             // 
@@ -66,14 +116,15 @@
             this.serverComboBox.ErrorTooltip = null;
             this.serverComboBox.ErrorTooltipTitle = "Validation Error";
             this.serverComboBox.IsValid = trhvmgr.Lib.tribool.NEUTRAL;
+            this.serverComboBox.LabelAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.serverComboBox.LabelAutoSize = false;
-            this.serverComboBox.LabelText = "Target Server Site:";
-            this.serverComboBox.LabelWidth = 110;
-            this.serverComboBox.Location = new System.Drawing.Point(10, 71);
+            this.serverComboBox.LabelText = "Target Server Site";
+            this.serverComboBox.LabelWidth = 120;
+            this.serverComboBox.Location = new System.Drawing.Point(10, 96);
             this.serverComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.serverComboBox.Name = "serverComboBox";
             this.serverComboBox.SelectedIndex = -1;
-            this.serverComboBox.Size = new System.Drawing.Size(325, 21);
+            this.serverComboBox.Size = new System.Drawing.Size(365, 21);
             this.serverComboBox.TabIndex = 9;
             // 
             // baseComboBox
@@ -88,21 +139,22 @@
             this.baseComboBox.ErrorTooltip = null;
             this.baseComboBox.ErrorTooltipTitle = "Validation Error";
             this.baseComboBox.IsValid = trhvmgr.Lib.tribool.NEUTRAL;
+            this.baseComboBox.LabelAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.baseComboBox.LabelAutoSize = false;
-            this.baseComboBox.LabelText = "Base VM Image:";
-            this.baseComboBox.LabelWidth = 110;
-            this.baseComboBox.Location = new System.Drawing.Point(10, 46);
+            this.baseComboBox.LabelText = "Base VM Image";
+            this.baseComboBox.LabelWidth = 120;
+            this.baseComboBox.Location = new System.Drawing.Point(10, 71);
             this.baseComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.baseComboBox.Name = "baseComboBox";
             this.baseComboBox.SelectedIndex = -1;
-            this.baseComboBox.Size = new System.Drawing.Size(325, 21);
+            this.baseComboBox.Size = new System.Drawing.Size(365, 21);
             this.baseComboBox.TabIndex = 8;
             // 
             // cancelbtn
             // 
             this.cancelbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelbtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelbtn.Location = new System.Drawing.Point(279, 105);
+            this.cancelbtn.Location = new System.Drawing.Point(319, 160);
             this.cancelbtn.Margin = new System.Windows.Forms.Padding(2);
             this.cancelbtn.Name = "cancelbtn";
             this.cancelbtn.Padding = new System.Windows.Forms.Padding(2);
@@ -114,7 +166,7 @@
             // addbtn
             // 
             this.addbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addbtn.Location = new System.Drawing.Point(219, 105);
+            this.addbtn.Location = new System.Drawing.Point(259, 160);
             this.addbtn.Margin = new System.Windows.Forms.Padding(2);
             this.addbtn.Name = "addbtn";
             this.addbtn.Padding = new System.Windows.Forms.Padding(2);
@@ -136,13 +188,14 @@
             this.vmTextbox.ErrorTooltip = "Field cannot be blank. Enter a\nvalid name for your new VM.";
             this.vmTextbox.ErrorTooltipTitle = "Validation Error";
             this.vmTextbox.IsValid = trhvmgr.Lib.tribool.NEUTRAL;
+            this.vmTextbox.LabelAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.vmTextbox.LabelAutoSize = false;
-            this.vmTextbox.LabelText = "Template VM Name: ";
-            this.vmTextbox.LabelWidth = 110;
-            this.vmTextbox.Location = new System.Drawing.Point(10, 23);
+            this.vmTextbox.LabelText = "Template VM Name";
+            this.vmTextbox.LabelWidth = 120;
+            this.vmTextbox.Location = new System.Drawing.Point(10, 48);
             this.vmTextbox.Margin = new System.Windows.Forms.Padding(2);
             this.vmTextbox.Name = "vmTextbox";
-            this.vmTextbox.Size = new System.Drawing.Size(325, 18);
+            this.vmTextbox.Size = new System.Drawing.Size(365, 18);
             this.vmTextbox.TabIndex = 3;
             // 
             // AddTemplateDialog
@@ -151,13 +204,14 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancelbtn;
-            this.ClientSize = new System.Drawing.Size(361, 155);
+            this.ClientSize = new System.Drawing.Size(401, 210);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "AddTemplateDialog";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add Template VM";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AddTemplateDialog_FormClosing);
             this.Load += new System.EventHandler(this.AddTemplateDialog_Load);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -171,5 +225,7 @@
         private System.Windows.Forms.Button addbtn;
         private UI.ValidatingComboBox baseComboBox;
         private UI.ValidatingComboBox serverComboBox;
+        private UI.ValidatingComboBox adapterComboBox;
+        private UI.ValidatingComboBox configComboBox;
     }
 }

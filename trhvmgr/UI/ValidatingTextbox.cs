@@ -36,6 +36,13 @@ namespace trhvmgr.UI
             set { label1.AutoSize = value; }
         }
 
+        [Description("Label text align"), Category("Label")]
+        public ContentAlignment LabelAlign
+        {
+            get { return label1.TextAlign; }
+            set { label1.TextAlign = value; }
+        }
+
         [Description("Button visible"), Category("Label")]
         public bool ButtonVisible
         {

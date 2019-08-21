@@ -1,18 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using trhvmgr.Lib;
+using trhvmgr.Properties;
 
 namespace trhvmgr.UI
 {
+    /// <summary>
+    /// Class to annotate application settings for
+    /// user friendly display on a PropertyGrid
+    /// </summary>
     public class SettingsAttribute
     {
         public static void SetAttribute(string propName, params Attribute[] attr)
         {
-            var _settings = Properties.Settings.Default;
+            var _settings = Settings.Default;
             PropertyOverridingTypeDescriptor ctd = new PropertyOverridingTypeDescriptor(TypeDescriptor.GetProvider(_settings).GetTypeDescriptor(_settings));
             foreach (PropertyDescriptor pd in TypeDescriptor.GetProperties(_settings))
             {
@@ -23,6 +25,19 @@ namespace trhvmgr.UI
                 }
             }
             TypeDescriptor.AddProvider(new TypeDescriptorOverridingProvider(ctd), _settings);
+        }
+
+        public static void SetAttribute(string prop, string category, string display, string description) =>
+            SetAttribute(prop, new CategoryAttribute(category), new DisplayNameAttribute(display), new DescriptionAttribute(description));
+
+        public static void SetAttribute(string prop, string category, string display, string description, params Attribute[] attr)
+        {
+            var l = attr.ToList();
+            l.AddRange(new Attribute[] {
+                new CategoryAttribute(category), new DisplayNameAttribute(display), new DescriptionAttribute(description),
+                new DefaultValueAttribute(Settings.Default.Properties[prop].DefaultValue)
+            });
+            SetAttribute(prop, l.ToArray());
         }
     }
 }

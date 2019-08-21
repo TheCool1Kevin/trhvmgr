@@ -58,8 +58,6 @@
   <ItemGroup>
     <Compile Include="CommandInfo.cs" />
     <Compile Include="CommandParser.cs" />
-    <Compile Include="Plugs\HyperV.cs" />
-    <Compile Include="Plugs\NetAdapter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

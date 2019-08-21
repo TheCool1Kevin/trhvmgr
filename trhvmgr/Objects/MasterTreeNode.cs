@@ -5,10 +5,38 @@ namespace trhvmgr.Objects
 {
     public enum NodeType
     {
+        Other = 0,
         HostComputer,
         VirtualMachines,
         VirtualHardDisks
     };
+
+    public class NodeState
+    {
+        private NodeType id = NodeType.Other;
+        public VirtualMachineState vs;
+        public HostState hs;
+        public NodeState(VirtualMachineState st)
+        {
+            id = NodeType.VirtualMachines;
+            vs = st;   
+        }
+        public NodeState(HostState st)
+        {
+            id = NodeType.HostComputer;
+            hs = st;
+        }
+        public NodeState()
+        {
+            id = NodeType.Other;
+        }
+        public override string ToString()
+        {
+            if (id == NodeType.HostComputer) return hs.ToString();
+            if (id == NodeType.VirtualMachines) return vs.ToString();
+            return "";
+        }
+    }
 
     public class NodeVirtualMachineType
     {
@@ -30,11 +58,22 @@ namespace trhvmgr.Objects
         public string Name { get; set; }
         public string Host { get; set; }
         public string Uuid { get; set; }
+        public string IpAddress { get; set; }
 
         public NodeVirtualMachineType VmType { get; set; }
 
         public NodeType Type { get; set; }
+        public NodeState State { get; set; }
+
         public List<MasterTreeNode> Children = new List<MasterTreeNode>();
+
+        public string ParentHost { get; set; }
+        public Guid ParentUuid { get; set; }
+
+        public MasterTreeNode()
+        {
+            State = new NodeState();
+        }
 
         public void BurnChildren()
         {
@@ -51,8 +90,11 @@ namespace trhvmgr.Objects
             Name = v.Name,
             Host = v.Host,
             Uuid = v.Uuid.ToString().ToUpper(),
+            State = new NodeState(v.State),
             Type = NodeType.VirtualMachines,
-            VmType = new NodeVirtualMachineType(v.Type)
+            VmType = new NodeVirtualMachineType(v.Type),
+            ParentHost = v.ParentHost,
+            ParentUuid = v.ParentUuid
         };
 
         [Obsolete("Use explicit casts instead")]
@@ -60,6 +102,7 @@ namespace trhvmgr.Objects
         public static explicit operator MasterTreeNode(DbHostComputer h) => new MasterTreeNode
         {
             Name = h.HostName,
+            State = new NodeState(HostState.Unknown),
             Type = NodeType.HostComputer
         };
 
@@ -68,6 +111,7 @@ namespace trhvmgr.Objects
         public static explicit operator MasterTreeNode(HostComputer h) => new MasterTreeNode
         {
             Name = h.HostName,
+            State = new NodeState(h.State),
             Type = NodeType.HostComputer
         };
 
@@ -77,7 +121,8 @@ namespace trhvmgr.Objects
             {
                 Name = file,
                 Host = host,
-                Type = type
+                Type = type,
+                State = new NodeState()
             };
         }
 

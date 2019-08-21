@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing.Design;
 using System.Windows.Forms;
-using trhvmgr.Properties;
 using trhvmgr.UI;
 
 namespace trhvmgr
@@ -16,10 +16,11 @@ namespace trhvmgr
         {
             // Initialize session
             SessionManager.Instance.InitializeDatabase();
-            SettingsAttribute.SetAttribute("Setting",
-                new DisplayNameAttribute("Some text"),
-                new DescriptionAttribute("This is a description"),
-                new DefaultValueAttribute(Settings.Default.Properties["Setting"].DefaultValue));
+            SettingsAttribute.SetAttribute(
+                "templateFile", "Configuration Files", "Template file path",
+                "Path to the JSON configuration file containing all VM templates",
+                new EditorAttribute(typeof(JsonFileSelectorTypeEditor), typeof(UITypeEditor))
+            );
 
             // Initialize application
             Application.EnableVisualStyles();

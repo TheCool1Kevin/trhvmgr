@@ -48,27 +48,31 @@ namespace trhvmgr.Database
             foreach (var h in hosts.FindAll())
             {
                 MasterTreeNode root = null;
+                HostState st = HostState.Unknown;
                 var vm = new List<VirtualMachine>();
                 try
                 {
                     vm = Interface.GetVms(h.HostName);
+                    st = HostState.Online;
                 }
                 catch(Exception ex)
                 {
                     MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK);
+                    st = HostState.Offline;
                 }
-                root = this.GetRootTreeNode(h, vm);
+                root = this.GetRootTreeNode(h, st, vm);
                 // Finally, add this host to our tree
                 if(root != null) Directory.Add(h.HostName, root);
             }
         }
 
-        private MasterTreeNode GetRootTreeNode(DbHostComputer dbHost, List<VirtualMachine> cache)
+        private MasterTreeNode GetRootTreeNode(DbHostComputer dbHost, HostState state, List<VirtualMachine> cache)
         {
             var root = (MasterTreeNode) dbHost;
+            root.State = new NodeState(state);
             foreach (var v in cache)
             {
-                v.Type = GetVmType(v.Uuid);
+                v.Type = GetVmDb(v.Uuid) == null ? VirtualMachineType.NONE : (VirtualMachineType) GetVmDb(v.Uuid).VmType;
                 // First, add all virtual machines associated with this host
                 var vnode = (MasterTreeNode) v;
                 // Then, add all virtual hard disks associated with this host
@@ -91,12 +95,12 @@ namespace trhvmgr.Database
         /// </summary>
         /// <param name="dbHost">The computer object to insert into the database.</param>
         /// <param name="cache">An optional cache parameter.</param>
-        public void AddServer(DbHostComputer dbHost, List<VirtualMachine> cache = null)
+        public void AddServer(DbHostComputer dbHost, HostState state, List<VirtualMachine> cache = null)
         {
             Insert(dbHost, x => x.HostName);
             if (cache == null)
                 cache = Interface.GetVms(dbHost.HostName);
-            var root = this.GetRootTreeNode(dbHost, cache);
+            var root = this.GetRootTreeNode(dbHost, state, cache);
             Directory.Add(dbHost.HostName, root);
         }
 
@@ -112,7 +116,12 @@ namespace trhvmgr.Database
             Directory.Remove(host);
         }
 
-        public List<DbHostComputer> GetServers()
+        /*public List<HostComputer> GetServers()
+        {
+            return Directory.Values.Select(x => (HostComputer) x).ToList();
+        }*/
+
+        public List<DbHostComputer> GetServerDb()
         {
             List<DbHostComputer> ret = new List<DbHostComputer>();
             var hosts = GetCollection<DbHostComputer>();
@@ -128,29 +137,39 @@ namespace trhvmgr.Database
             Update(vm, x => x.Uuid);
         }
 
-        public VirtualMachineType GetVmType(Guid id)
+        public DbVirtualMachine GetVmDb(Guid id)
         {
             var vms = GetCollection<DbVirtualMachine>();
             var col = vms.Find(x => x.Uuid == id);
             if (col.Count() > 0)
-                return (VirtualMachineType)col.ElementAt(0).VmType;
-            return VirtualMachineType.NONE;
+                return col.ElementAt(0);
+            return null;
         }
 
-        public List<VirtualMachine> GetVms(VirtualMachineType type)
+        public List<VirtualMachine> GetVm(VirtualMachineType type)
         {
             List<VirtualMachine> res = new List<VirtualMachine>();
             foreach (var c in Directory.Values)
-                c.Children.Where(x => x.VmType?.Value == type).ToList().ForEach(x => 
-                    res.Add(VirtualMachine.FromTreeNode(x)));
+                c.Children.Where(x => x.VmType?.Value == type).ToList().ForEach(x => res.Add((VirtualMachine) x));
             return res;
         }
 
-        public List<VirtualMachine> GetVms(string host)
+        public List<VirtualMachine> GetVm(string host)
         {
             List<VirtualMachine> res = new List<VirtualMachine>();
-            Directory[host].Children.ForEach(x => res.Add(VirtualMachine.FromTreeNode(x)));
+            Directory[host].Children.ForEach(x => res.Add((VirtualMachine) x));
             return res;
+        }
+
+        public VirtualMachine GetVm(string host, Guid id)
+        {
+            VirtualMachine vm = null;
+            Directory[host].Children.ForEach(x =>
+            {
+                if (Guid.Parse(x.Uuid) == id)
+                    vm = (VirtualMachine)x;
+            });
+            return vm;
         }
 
         #endregion

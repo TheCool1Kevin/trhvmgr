@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
@@ -8,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using trhvmgr.Lib;
 using trhvmgr.Objects;
+using trhvmgr.Properties;
 
 namespace trhvmgr.Plugs
 {
@@ -49,6 +52,15 @@ namespace trhvmgr.Plugs
 
         #endregion
 
+        #region Powershell Utilities
+
+        public static void CopyFile(string srcHost, string dstHost, string src, string dst)
+        {
+
+        }
+        
+        #endregion
+
         #region Virtual Machine State Query
 
         /// <exception cref="Exception">May throw exceptions</exception>
@@ -65,6 +77,7 @@ namespace trhvmgr.Plugs
                     Host = hostName,
                     Name = m.Members["VMName"].Value.ToString(),
                     Uuid = (Guid)m.Members["VMId"].Value,
+                    State = VirtualMachine.GetStateFromString(m.Members["State"].Value.ToString()),
                     VhdPath = Array.ConvertAll(PSWrapper.Execute(hostName, (ps) =>
                     {
                         return ps.AddCommand("Get-VM")
@@ -76,6 +89,15 @@ namespace trhvmgr.Plugs
                 });
             }
             return machines;
+        }
+
+        public static void NewTemplate(string hostName, string name, Guid baseUid, string switchName, JToken config)
+        {
+            var baseVm = SessionManager.GetDatabase().GetVm(hostName, baseUid);
+            string vhdPath = Path.Combine(Settings.Default.vhdPath, hostName + "\\" + baseUid.ToString() + ".vhdx");
+            if (baseVm.Host != hostName)
+                CopyFile(hostName, baseVm.Host, baseVm.VhdPath[0], vhdPath);
+            PSWrapper.Execute(hostName, config, null, name, vhdPath, switchName);
         }
 
         #endregion

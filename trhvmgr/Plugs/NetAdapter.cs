@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using trhvmgr.Plugs;
 
-namespace trhvmgr.Interactive.Plugs
+namespace trhvmgr.Plugs
 {
     /// <summary>
     /// Interface for netadapter Powershell Module,

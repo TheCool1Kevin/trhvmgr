@@ -91,12 +91,14 @@ namespace trhvmgr
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.treeListView = new BrightIdeasSoftware.TreeListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -112,7 +114,6 @@ namespace trhvmgr
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.queryText = new System.Windows.Forms.TextBox();
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainToolstrip.SuspendLayout();
             this.mainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.treeListView)).BeginInit();
@@ -254,17 +255,24 @@ namespace trhvmgr
             // 
             // editToolStripMenuItem
             // 
-            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.settingsToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "&Edit";
             // 
             // viewToolStripMenuItem
             // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.settingsToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "&View";
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.settingsToolStripMenuItem.Text = "Application Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -278,6 +286,7 @@ namespace trhvmgr
             this.treeListView.AllColumns.Add(this.olvColumn2);
             this.treeListView.AllColumns.Add(this.olvColumn3);
             this.treeListView.AllColumns.Add(this.olvColumn4);
+            this.treeListView.AllColumns.Add(this.olvColumn5);
             this.treeListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -286,7 +295,8 @@ namespace trhvmgr
             this.olvColumn1,
             this.olvColumn2,
             this.olvColumn3,
-            this.olvColumn4});
+            this.olvColumn4,
+            this.olvColumn5});
             this.treeListView.Cursor = System.Windows.Forms.Cursors.Default;
             this.treeListView.EmptyListMsg = "Add server to continue.";
             this.treeListView.EmptyListMsgFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -328,19 +338,26 @@ namespace trhvmgr
             this.olvColumn2.Text = "Host PC";
             this.olvColumn2.Width = 68;
             // 
-            // olvColumn3
-            // 
-            this.olvColumn3.AspectName = "Uuid";
-            this.olvColumn3.DisplayIndex = 3;
-            this.olvColumn3.Text = "UUID";
-            this.olvColumn3.Width = 304;
-            // 
             // olvColumn4
             // 
             this.olvColumn4.AspectName = "VmType";
             this.olvColumn4.DisplayIndex = 2;
             this.olvColumn4.IsEditable = false;
             this.olvColumn4.Text = "VMType";
+            // 
+            // olvColumn5
+            // 
+            this.olvColumn5.AspectName = "State";
+            this.olvColumn5.DisplayIndex = 3;
+            this.olvColumn5.Text = "State";
+            // 
+            // olvColumn3
+            // 
+            this.olvColumn3.AspectName = "Uuid";
+            this.olvColumn3.DisplayIndex = 4;
+            this.olvColumn3.FillsFreeSpace = true;
+            this.olvColumn3.Text = "UUID";
+            this.olvColumn3.Width = 100;
             // 
             // imageList1
             // 
@@ -506,13 +523,6 @@ namespace trhvmgr
             this.queryText.TabIndex = 4;
             this.queryText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.queryText_KeyDown);
             // 
-            // settingsToolStripMenuItem
-            // 
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.settingsToolStripMenuItem.Text = "Application Settings";
-            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
-            // 
             // MainFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -592,5 +602,6 @@ namespace trhvmgr
         private ToolStripButton toolStripButton4;
         private BrightIdeasSoftware.OLVColumn olvColumn4;
         private ToolStripMenuItem settingsToolStripMenuItem;
+        private BrightIdeasSoftware.OLVColumn olvColumn5;
     }
 }

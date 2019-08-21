@@ -138,9 +138,13 @@
     </Compile>
     <Compile Include="Lib\BackgroundWorkerQueue.cs" />
     <Compile Include="Lib\DummyWorker.cs" />
+    <Compile Include="Lib\JsonHelper.cs" />
     <Compile Include="Lib\NetworkUtil.cs" />
     <Compile Include="Lib\NetworkWorkerObject.cs" />
     <Compile Include="Lib\PSWrapper.cs" />
+    <Compile Include="Plugs\HyperV.cs" />
+    <Compile Include="Plugs\NetAdapter.cs" />
+    <Compile Include="UI\FileSelectorTypeEditor.cs" />
     <Compile Include="UI\SettingsAttribute.cs" />
     <Compile Include="Lib\tribool.cs" />
     <Compile Include="Lib\NetworkWorkers.cs" />
@@ -282,7 +286,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties Config_4commands_1json__JSONSchema="http://json-schema.org/draft-04/schema" Config_4templates_1json__JSONSchema="http://json-schema.org/draft-04/schema" />
+      <UserProperties Config_4templates_1json__JSONSchema="http://json-schema.org/draft-04/schema" Config_4commands_1json__JSONSchema="http://json-schema.org/draft-04/schema" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

@@ -25,13 +25,25 @@ namespace trhvmgr.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Default")]
-        public string Setting {
+        [global::System.Configuration.DefaultSettingValueAttribute("Config\\templates.json")]
+        public string templateFile {
             get {
-                return ((string)(this["Setting"]));
+                return ((string)(this["templateFile"]));
             }
             set {
-                this["Setting"] = value;
+                this["templateFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\VHDs\\")]
+        public string vhdPath {
+            get {
+                return ((string)(this["vhdPath"]));
+            }
+            set {
+                this["vhdPath"] = value;
             }
         }
     }

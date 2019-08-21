@@ -125,7 +125,7 @@ namespace trhvmgr
                 try
                 {
                     SessionManager.GetDatabase().AddServer(
-                        new DbHostComputer { HostName = hostnameText.Text }, vms
+                        new DbHostComputer { HostName = hostnameText.Text }, HostState.Online, vms
                     );
                 }
                 catch(Exception ex)

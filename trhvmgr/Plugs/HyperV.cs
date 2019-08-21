@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using trhvmgr.Lib;
 
-namespace trhvmgr.Interactive.Plugs
+namespace trhvmgr.Plugs
 {
     /// <summary>
     /// Interface for Hyper-V Powershell Module,

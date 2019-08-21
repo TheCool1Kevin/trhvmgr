@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using trhvmgr.Plugs;
-using trhvmgr.Interactive.Plugs;
-using trhvmgr.Lib;
-using System.Net;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.IO;
-using Newtonsoft.Json;
-using System.Management.Automation;
+using System.Linq;
+using System.Net;
+using trhvmgr.Lib;
+using trhvmgr.Plugs;
 
 namespace trhvmgr.Interactive
 {
