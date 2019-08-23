@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -107,11 +108,22 @@ namespace trhvmgr
                 var a3 = GetSelectedVirtualMachine().Uuid;
                 var a4 = GetSelectedSwitch().Name;
                 var a5 = configComboBox.SelectedIndex;
-                var backgroundWorker = new BackgroundWorkerQueueDialog("Loading servers...", ProgressBarStyle.Marquee);
-                backgroundWorker.AppendTask("Connecting machines...", DummyWorker.GetWorker((ctx) => {
+                var backgroundWorker = new BackgroundWorkerQueueDialog("Loading servers...");
+                backgroundWorker.AppendTask("Creating VM...", DummyWorker.GetWorker((ctx) => {
+                    // Make progress bar show progress
+                    var handles = PsStreamEventHandlers.DefaultHandlers;
+                    handles.Progress = (o, ev) =>
+                    {
+                        ProgressRecord r = ((PSDataCollection<ProgressRecord>)o)[ev.Index];
+                        ctx.d.ReportCaption(r.Activity);
+                        if (r.PercentComplete >= 0 && r.PercentComplete <= 100)
+                            ctx.d.ReportProgress(r.PercentComplete);
+                    };
+
+                    // Try to create the VM
                     try
                     {
-                        Interface.NewTemplate(a1, a2, a3, a4, jsonHelper.JObject["templates"][a5]);
+                        Interface.NewTemplate(a1, a2, a3, a4, jsonHelper.JObject["templates"][a5], handles);
                         ctx.s = StatusCode.OK;
                     }
                     catch (Exception ex)

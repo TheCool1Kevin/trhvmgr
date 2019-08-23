@@ -84,7 +84,8 @@
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.PowerShell.5.ReferenceAssemblies.1.1.0\lib\net4\System.Management.Automation.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\System.Management.Automation.dll</HintPath>
     </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
@@ -206,6 +207,12 @@
     <Compile Include="UI\ValidatingTextbox.Designer.cs">
       <DependentUpon>ValidatingTextbox.cs</DependentUpon>
     </Compile>
+    <AdditionalFiles Include="Third-Party\PsExec.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AdditionalFiles>
+    <AdditionalFiles Include="Third-Party\PsExec64.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AdditionalFiles>
     <EmbeddedResource Include="AddServerDialog.resx">
       <DependentUpon>AddServerDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -286,7 +293,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties Config_4templates_1json__JSONSchema="http://json-schema.org/draft-04/schema" Config_4commands_1json__JSONSchema="http://json-schema.org/draft-04/schema" />
+      <UserProperties Config_4commands_1json__JSONSchema="http://json-schema.org/draft-04/schema" Config_4templates_1json__JSONSchema="http://json-schema.org/draft-04/schema" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

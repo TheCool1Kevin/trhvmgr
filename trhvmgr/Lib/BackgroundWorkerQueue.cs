@@ -12,14 +12,16 @@ namespace trhvmgr.Lib
     public class WorkerDelegate
     {
         private BackgroundWorker _w;
+        private BackgroundWorkerQueue _q;
 
         /// <summary>
         /// Constructor for WorkerDelegate.
         /// </summary>
         /// <param name="w">BackgroundWorker object</param>
-        public WorkerDelegate(BackgroundWorker w)
+        public WorkerDelegate(BackgroundWorker w, BackgroundWorkerQueue q)
         {
             _w = w;
+            _q = q;
         }
 
         /// <summary>
@@ -30,6 +32,11 @@ namespace trhvmgr.Lib
         public void ReportProgress(float percent)
         {
             _w.ReportProgress((int) (percent));
+        }
+
+        public void ReportCaption(string cap)
+        {
+            _q.SetText(cap);
         }
     }
 
@@ -107,7 +114,7 @@ namespace trhvmgr.Lib
 
         private void _w_DoWork(object sender, DoWorkEventArgs e)
         {
-            WorkerContext res = new WorkerContext(StatusCode.OK, null, new WorkerDelegate(_w));
+            WorkerContext res = new WorkerContext(StatusCode.OK, null, new WorkerDelegate(_w, this));
             for (_i = 0; _i < _ntasks; _i++)
             {
                 _w.ReportProgress(0);
@@ -161,6 +168,13 @@ namespace trhvmgr.Lib
         public int GetTaskCount()
         {
             return _ntasks;
+        }
+
+        internal void SetText(string t)
+        {
+            if (_i >= _texts.Count)
+                _texts[_texts.Count - 1] = t;
+            _texts[_i] = t;
         }
     }
 }

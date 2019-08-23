@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -54,9 +55,37 @@ namespace trhvmgr.Plugs
 
         #region Powershell Utilities
 
-        public static void CopyFile(string srcHost, string dstHost, string src, string dst)
+        public static void CopyFile(string srcHost, string dstHost, string src, string dst, PsStreamEventHandlers handlers = null)
         {
+            PSWrapper.Execute(dstHost, (ps) =>
+            {
+                ps.AddCommand("Set-Variable").AddParameter("Name", "cred").AddParameter("Value", SessionManager.GetCredential());
+                ps.AddScript($"Copy-Item \"{src}\" \"{dst}\" -Force –FromSession (New-PSSession –ComputerName {srcHost} -Credential $cred)");
+                ps.Invoke();
+                return null;
+            }, handlers);
+        }
 
+        public static void StartBitsTransfer(string srcHost, string dstHost, string src, string dst, PsStreamEventHandlers handlers = null)
+        {
+            PSWrapper.Execute(dstHost, (ps) =>
+            {
+                ps.AddCommand("Set-Variable").AddParameter("Name", "cred").AddParameter("Value", SessionManager.GetCredential());
+                ps.AddScript($"Start-BitsTransfer -Credential $cred -Source {src} -Destination {dst}");
+                ps.Invoke();
+                return null;
+            });
+        }
+
+        public static void NewDirectory(string host, string path, PsStreamEventHandlers handlers = null)
+        {
+            PSWrapper.Execute(host, (ps) =>
+            {
+                return ps.AddCommand("New-Item")
+                    .AddParameter("Type", "Directory")
+                    .AddParameter("Path", path)
+                    .AddParameter("Force").Invoke();
+            }, handlers);
         }
         
         #endregion
@@ -64,7 +93,7 @@ namespace trhvmgr.Plugs
         #region Virtual Machine State Query
 
         /// <exception cref="Exception">May throw exceptions</exception>
-        public static List<VirtualMachine> GetVms(string hostName)
+        public static List<VirtualMachine> GetVms(string hostName, PsStreamEventHandlers handlers = null)
         {
             Collection<PSObject> objs = null;
             PSWrapper.Execute(hostName, "Get-Vm", out objs);
@@ -91,13 +120,19 @@ namespace trhvmgr.Plugs
             return machines;
         }
 
-        public static void NewTemplate(string hostName, string name, Guid baseUid, string switchName, JToken config)
+        public static void NewTemplate(string hostName, string name, Guid baseUid, string switchName, JToken config, PsStreamEventHandlers handlers = null)
         {
-            var baseVm = SessionManager.GetDatabase().GetVm(hostName, baseUid);
-            string vhdPath = Path.Combine(Settings.Default.vhdPath, hostName + "\\" + baseUid.ToString() + ".vhdx");
+            var baseVm = SessionManager.GetDatabase().GetVm(baseUid);
+            var srcHost = baseVm.Host;
+            var dstHost = hostName;
+            string dstDir = Path.Combine(Settings.Default.vhdPath, srcHost);
+            string dstPath = Path.Combine(dstDir, baseUid.ToString() + ".vhdx");
             if (baseVm.Host != hostName)
-                CopyFile(hostName, baseVm.Host, baseVm.VhdPath[0], vhdPath);
-            PSWrapper.Execute(hostName, config, null, name, vhdPath, switchName);
+            {
+                NewDirectory(dstHost, dstDir, handlers);
+                CopyFile(srcHost, dstHost, baseVm.VhdPath[0], dstPath, handlers);
+            }
+            PSWrapper.Execute(dstHost, config, null, name, dstPath, switchName);
         }
 
         #endregion

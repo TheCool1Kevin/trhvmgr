@@ -167,8 +167,23 @@ namespace trhvmgr.Database
             Directory[host].Children.ForEach(x =>
             {
                 if (Guid.Parse(x.Uuid) == id)
+                {
                     vm = (VirtualMachine)x;
+                }
             });
+            return vm;
+        }
+
+        public VirtualMachine GetVm(Guid id)
+        {
+            VirtualMachine vm = null;
+            Directory.Values.ToList().ForEach(x => x.Children.ForEach(y =>
+            {
+                if (Guid.Parse(y.Uuid) == id)
+                {
+                    vm = (VirtualMachine)y;                    
+                }
+            }));
             return vm;
         }
 

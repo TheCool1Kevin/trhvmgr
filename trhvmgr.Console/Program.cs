@@ -9,6 +9,7 @@ using System.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using trhvmgr.Lib;
 
 namespace trhvmgr.Interactive
 {
@@ -164,6 +165,8 @@ namespace trhvmgr.Interactive
 
             SessionManager.Instance.SetCredential(new PSCredential(usr, psw));
             //SessionManager.Instance.InitializeDatabase(ConfigurationManager.ConnectionStrings["ServerDB"].ConnectionString);
+
+            //Plugs.Interface.StartBitsTransfer("PC18-126", "PC19-102", @"\\PC18-126\c$\VHDs\test.txt", @"C:\copy.txt", PsStreamEventHandlers.DefaultHandlers);
 
             Console.WriteLine("Entered management console. Type commands after '>' and press return to submit.");
             Console.WriteLine("Type '?' for help. Type 'q' to quit.");
