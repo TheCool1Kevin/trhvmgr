@@ -1,0 +1,87 @@
+﻿{
+  "$id": "http://example.com/root.json",
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "definitions": {},
+  "properties": {
+    "templates": {
+      "$id": "#/properties/templates",
+      "type": "array",
+      "title": "The Templates Schema",
+      "items": {
+        "$id": "#/properties/templates/items",
+        "type": "object",
+        "title": "The Items Schema",
+        "required": [
+          "name",
+          "actions"
+        ],
+        "properties": {
+          "name": {
+            "$id": "#/properties/templates/items/properties/name",
+            "type": "string",
+            "title": "The Name Schema",
+            "default": "",
+            "examples": [
+              "New VM Configuration"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "actions": {
+            "$id": "#/properties/templates/items/properties/actions",
+            "type": "array",
+            "title": "The Actions Schema",
+            "items": {
+              "$id": "#/properties/templates/items/properties/actions/items",
+              "type": "object",
+              "title": "The Items Schema",
+              "required": [
+                "ps",
+                "params"
+              ],
+              "properties": {
+                "ps": {
+                  "$id": "#/properties/templates/items/properties/actions/items/properties/ps",
+                  "type": "string",
+                  "title": "The Ps Schema",
+                  "default": "",
+                  "examples": [
+                    "New-VM"
+                  ],
+                  "pattern": "^(.*)$"
+                },
+                "pipevmid": {
+                  "$id": "#/properties/templates/items/properties/actions/items/properties/pipevmid",
+                  "type": "boolean",
+                  "title": "The Pipevmid Schema",
+                  "default": false,
+                  "examples": [
+                    true
+                  ]
+                },
+                "getvm": {
+                  "$id": "#/properties/templates/items/properties/actions/items/properties/getvm",
+                  "type": "boolean",
+                  "title": "The Getvm Schema",
+                  "default": false,
+                  "examples": [
+                    false
+                  ]
+                },
+                "params": {
+                  "$id": "#/properties/templates/items/properties/actions/items/properties/params",
+                  "type": "object",
+                  "title": "The Params Schema"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "templates"
+  ],
+  "title": "The Root Schema",
+  "type": "object"
+}

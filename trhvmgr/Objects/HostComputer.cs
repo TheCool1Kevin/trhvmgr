@@ -30,7 +30,7 @@ namespace trhvmgr.Objects
         {
             HostName = node.Host,
             IpAddress = node.IpAddress,
-            VirtualMachines = node.Children.Select(x => Guid.Parse(x.Uuid)).ToList()
+            VirtualMachines = node.Children.Where(x => x.Type == NodeType.VirtualMachines).Select(x => Guid.Parse(x.Uuid)).ToList()
         };
     }
 

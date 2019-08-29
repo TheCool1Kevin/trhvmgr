@@ -9,6 +9,8 @@ using trhvmgr.Objects;
 using trhvmgr.Plugs;
 using System.Windows.Forms;
 using System.Linq.Expressions;
+using trhvmgr.Properties;
+using trhvmgr.Lib;
 
 namespace trhvmgr.Database
 {
@@ -26,7 +28,7 @@ namespace trhvmgr.Database
             _db = new LiteDatabase(connectionString);
         }
 
-        public DatabaseManager() : this(ConfigurationManager.ConnectionStrings["ServerDB"].ConnectionString)
+        public DatabaseManager() : this(Settings.Default.connectionString)
         {
 
         }
@@ -38,7 +40,7 @@ namespace trhvmgr.Database
         /// <summary>
         /// Exception safe cache flushing for virtual machines.
         /// </summary>
-        public void FlushCache()
+        public void FlushCache(PsStreamEventHandlers handlers = null)
         {
             foreach(var e in Directory) e.Value.BurnChildren();
             Directory.Clear();
@@ -49,10 +51,20 @@ namespace trhvmgr.Database
             {
                 MasterTreeNode root = null;
                 HostState st = HostState.Unknown;
+                try
+                {
+                    Interface.BringOnline(h.HostName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK);
+                    st = HostState.Offline;
+                }
+
                 var vm = new List<VirtualMachine>();
                 try
                 {
-                    vm = Interface.GetVms(h.HostName);
+                    vm = HyperV.GetVm(h.HostName, handlers);
                     st = HostState.Online;
                 }
                 catch(Exception ex)
@@ -60,6 +72,7 @@ namespace trhvmgr.Database
                     MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK);
                     st = HostState.Offline;
                 }
+
                 root = this.GetRootTreeNode(h, st, vm);
                 // Finally, add this host to our tree
                 if(root != null) Directory.Add(h.HostName, root);
@@ -70,16 +83,39 @@ namespace trhvmgr.Database
         {
             var root = (MasterTreeNode) dbHost;
             root.State = new NodeState(state);
+            var vvhds = new List<string>();
             foreach (var v in cache)
             {
-                v.Type = GetVmDb(v.Uuid) == null ? VirtualMachineType.NONE : (VirtualMachineType) GetVmDb(v.Uuid).VmType;
+                var vdb = GetVmDb(v.Uuid);
+                v.Type = vdb == null ? VirtualMachineType.NONE : (VirtualMachineType) vdb.VmType;
+                v.ParentHost = vdb == null ? v.Host : vdb.ParentHost;
+                v.ParentUuid = vdb == null ? v.Uuid : vdb.ParentUuid;
+
                 // First, add all virtual machines associated with this host
                 var vnode = (MasterTreeNode) v;
                 // Then, add all virtual hard disks associated with this host
+                vvhds.AddRange(v.VhdPath);
                 foreach (var vhd in v.VhdPath)
                     vnode.Children.Add(MasterTreeNode.GetTreeNode(vhd, v.Host, NodeType.VirtualHardDisks));
                 root.Children.Add(vnode);
             }
+
+            // Get orphaned VHDs
+            try
+            {
+                var vhds = Interface.GetChildItems(dbHost.HostName, Settings.Default.vhdPath, "*.*vhd*");
+                if (vhds != null)
+                {
+                    vhds = vhds.Except(vvhds).ToArray();
+                    foreach (var v in vhds)
+                        root.Children.Add(MasterTreeNode.GetTreeNode(v, dbHost.HostName, NodeType.OrphanedVirtualHardDisks));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK);
+            }
+
             return root;
         }
 
@@ -99,7 +135,7 @@ namespace trhvmgr.Database
         {
             Insert(dbHost, x => x.HostName);
             if (cache == null)
-                cache = Interface.GetVms(dbHost.HostName);
+                cache = HyperV.GetVm(dbHost.HostName);
             var root = this.GetRootTreeNode(dbHost, state, cache);
             Directory.Add(dbHost.HostName, root);
         }
@@ -131,9 +167,14 @@ namespace trhvmgr.Database
         public void SetVmType(DbVirtualMachine vm, VirtualMachineType type)
         {
             vm.VmType = (int) type;
-            // !! It is important to normalize the strings with ToUpper()
-            var node = Directory[vm.Host].Children.Find(x => x.Uuid.ToUpper() == vm.Uuid.ToString().ToUpper());
+            // !! It is important to normalize thngs with ToUpper()
+            var node = Directory[vm.Host].Children.Find(x => x.Type == NodeType.VirtualMachines && x.Uuid.ToUpper() == vm.Uuid.ToString().ToUpper());
             node.VmType = new NodeVirtualMachineType(type);
+            Update(vm, x => x.Uuid);
+        }
+
+        public void SetVm(DbVirtualMachine vm)
+        {
             Update(vm, x => x.Uuid);
         }
 
@@ -150,14 +191,15 @@ namespace trhvmgr.Database
         {
             List<VirtualMachine> res = new List<VirtualMachine>();
             foreach (var c in Directory.Values)
-                c.Children.Where(x => x.VmType?.Value == type).ToList().ForEach(x => res.Add((VirtualMachine) x));
+                c.Children.Where(x => x.VmType?.Value == type && x.Type == NodeType.VirtualMachines)
+                    .ToList().ForEach(x => res.Add((VirtualMachine) x));
             return res;
         }
 
         public List<VirtualMachine> GetVm(string host)
         {
             List<VirtualMachine> res = new List<VirtualMachine>();
-            Directory[host].Children.ForEach(x => res.Add((VirtualMachine) x));
+            Directory[host].Children.Where(x => x.Type == NodeType.VirtualMachines).ToList().ForEach(x => res.Add((VirtualMachine) x));
             return res;
         }
 
@@ -166,10 +208,8 @@ namespace trhvmgr.Database
             VirtualMachine vm = null;
             Directory[host].Children.ForEach(x =>
             {
-                if (Guid.Parse(x.Uuid) == id)
-                {
+                if (x.Type == NodeType.VirtualMachines && Guid.Parse(x.Uuid) == id)
                     vm = (VirtualMachine)x;
-                }
             });
             return vm;
         }
@@ -179,12 +219,18 @@ namespace trhvmgr.Database
             VirtualMachine vm = null;
             Directory.Values.ToList().ForEach(x => x.Children.ForEach(y =>
             {
-                if (Guid.Parse(y.Uuid) == id)
-                {
-                    vm = (VirtualMachine)y;                    
-                }
+                if (y.Type == NodeType.VirtualMachines && Guid.Parse(y.Uuid) == id)
+                    vm = (VirtualMachine)y;
             }));
             return vm;
+        }
+
+        public void RemoveVm(Guid id)
+        {
+            var vm = GetVm(id);
+            if (vm != null)
+                vm.Type = VirtualMachineType.NONE;
+            Delete<DbVirtualMachine, Guid>(x => x.Uuid == id, x => x.Uuid);
         }
 
         #endregion

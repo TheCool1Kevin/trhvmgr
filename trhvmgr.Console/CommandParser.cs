@@ -64,7 +64,7 @@ namespace trhvmgr.Interactive
         {
             string server = Dns.GetHostName();
             if (tokens.Length == 2) server = tokens[1];
-            foreach (var obj in HyperV.GetVm(server))
+            foreach (var obj in HyperV.GetPsVm(server))
                 Console.WriteLine(obj.ToString());
         }
 

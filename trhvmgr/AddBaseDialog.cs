@@ -10,11 +10,16 @@ using System.Windows.Forms;
 
 namespace trhvmgr
 {
-    public partial class AddVhdDialog : Form
+    public partial class AddBaseDialog : Form
     {
-        public AddVhdDialog()
+        public AddBaseDialog()
         {
             InitializeComponent();
+        }
+
+        private void AddBaseDialog_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

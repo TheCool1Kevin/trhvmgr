@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using trhvmgr.Lib;
 using trhvmgr.Objects;
@@ -12,7 +16,7 @@ using trhvmgr.UI;
 
 namespace trhvmgr
 {
-    public partial class AddTemplateDialog : Form
+    public partial class DeployDialog : Form
     {
         private class SwitchObj
         {
@@ -27,36 +31,41 @@ namespace trhvmgr
         private List<HostComputer> hostComputers = new List<HostComputer>();
         private List<VirtualMachine> virtualMachines = new List<VirtualMachine>();
         private JsonHelper jsonHelper = null;
+        private string suggestedVmName = "";
 
-        public AddTemplateDialog()
+        public DeployDialog(string vmName = "")
         {
-            InitializeComponent();
+            suggestedVmName = vmName;
             jsonHelper = new JsonHelper(Settings.Default.templateFile, FileShare.Read);
+            InitializeComponent();
             serverComboBox.ComboBox.SelectedIndexChanged += (o, e) =>
             {
                 adapterComboBox.ComboBox.Items.Clear();
                 adapterComboBox.ComboBox.Items.AddRange(
                     HyperV.GetVmSwitch(GetSelectedHost()?.HostName)
-                    .Select(x => new SwitchObj {
-                        Name = (string) x.Members["Name"].Value,
-                        Type = (string) x.Members["SwitchType"].Value
+                    .Select(x => new SwitchObj
+                    {
+                        Name = (string)x.Members["Name"].Value,
+                        Type = (string)x.Members["SwitchType"].Value
                     }).ToArray());
             };
         }
 
+                
         #region Private Methods
 
         private HostComputer GetSelectedHost()
         {
-            if(serverComboBox.ComboBox.SelectedIndex >= 0 && serverComboBox.ComboBox.SelectedIndex < hostComputers.Count())
+            if (serverComboBox.ComboBox.SelectedIndex >= 0 && serverComboBox.ComboBox.SelectedIndex < hostComputers.Count())
                 return hostComputers[serverComboBox.ComboBox.SelectedIndex];
             return null;
         }
 
         private VirtualMachine GetSelectedVirtualMachine()
         {
-            if (baseComboBox.ComboBox.SelectedIndex >= 0 && baseComboBox.ComboBox.SelectedIndex < virtualMachines.Count())
-                return virtualMachines[baseComboBox.ComboBox.SelectedIndex];
+            if (tmplComboBox.ComboBox.SelectedIndex >= 0 && tmplComboBox
+.ComboBox.SelectedIndex < virtualMachines.Count())
+                return virtualMachines[tmplComboBox.ComboBox.SelectedIndex];
             return null;
         }
 
@@ -76,65 +85,7 @@ namespace trhvmgr
             }
         }
 
-        private void addbtn_Click(object sender, EventArgs e)
-        {
-            bool isFormValid = false;
-            // Disgusting
-            if (serverComboBox.SelectedIndex == -1) serverComboBox.IsValid = tribool.FALSE; else serverComboBox.IsValid = tribool.TRUE;
-            if (baseComboBox.SelectedIndex == -1) baseComboBox.IsValid = tribool.FALSE; else baseComboBox.IsValid = tribool.TRUE;
-            if (configComboBox.SelectedIndex == -1) configComboBox.IsValid = tribool.FALSE; else configComboBox.IsValid = tribool.TRUE;
-            if (adapterComboBox.SelectedIndex == -1) adapterComboBox.IsValid = tribool.FALSE; else adapterComboBox.IsValid = tribool.TRUE;
-            if (string.IsNullOrEmpty(vmTextbox.Text)) vmTextbox.IsValid = tribool.FALSE; else vmTextbox.IsValid = tribool.TRUE;
-
-            isFormValid = serverComboBox.IsValid == tribool.TRUE
-                && baseComboBox.IsValid == tribool.TRUE
-                && vmTextbox.IsValid == tribool.TRUE
-                && configComboBox.IsValid == tribool.TRUE
-                && adapterComboBox.IsValid == tribool.TRUE;
-
-            if (!isFormValid) this.DialogResult = DialogResult.None;
-            else
-            {
-                // !! IMPORTANT !!
-                // We NEED these exactly here because of cross thread errors
-                // (we cannot get the user inputs from the BackgroundWorker)
-                var a1 = GetSelectedHost().HostName;
-                var a2 = vmTextbox.Text;
-                var a3 = GetSelectedVirtualMachine().Uuid;
-                var a4 = GetSelectedSwitch().Name;
-                var a5 = configComboBox.SelectedIndex;
-
-                if (a1 != GetSelectedVirtualMachine().Host &&
-                    MessageBox.Show(
-                        "The selected target server is different from the server hosting the base image. Do you want to continue?",
-                        "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
-                {
-                    this.DialogResult = DialogResult.None;
-                    return;
-                }
-
-                var backgroundWorker = new BackgroundWorkerQueueDialog("Loading servers...");
-                backgroundWorker.AppendTask("Creating VM...", DummyWorker.GetWorker((ctx) => {
-                    // Try to create the VM
-                    try
-                    {
-                        Interface.NewTemplate(a1, a2, a3, a4, jsonHelper.JObject["templates"][a5], PsStreamEventHandlers.GetUIHandlers(ctx));
-                        ctx.s = StatusCode.OK;
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK);
-                        ctx.s = StatusCode.FAILED;
-                    }
-                    return ctx;
-                }));
-                backgroundWorker.ShowDialog();
-                if (backgroundWorker.GetWorker().ReturnedObjects[0].s == StatusCode.OK)
-                    this.DialogResult = DialogResult.OK;
-            }
-        }
-
-        private void AddTemplateDialog_Load(object sender, EventArgs e)
+        private void DeployDialog_Load(object sender, EventArgs e)
         {
             // Get server information
             BackgroundWorkerQueueDialog backgroundWorker = new BackgroundWorkerQueueDialog("Retrieving Network Information");
@@ -177,12 +128,12 @@ namespace trhvmgr
                 SessionManager.GetDatabase().FlushCache(PsStreamEventHandlers.GetUIHandlers(ctx));
                 try
                 {
-                    foreach (var vm in SessionManager.GetDatabase().GetVm(VirtualMachineType.BASE))
+                    foreach (var vm in SessionManager.GetDatabase().GetVm(VirtualMachineType.TEMPLATE))
                         virtualMachines.Add(vm);
                     virtualMachines.ForEach(x =>
                     {
-                        ThreadManager.Invoke(this, baseComboBox, () => 
-                            baseComboBox.ComboBox.Items.Add(x.Name + " [" + x.Host + "]")
+                        ThreadManager.Invoke(this, tmplComboBox, () =>
+                            tmplComboBox.ComboBox.Items.Add(x.Name + " [" + x.Host + "]")
                         );
                     });
                     ctx.s = StatusCode.OK;
@@ -195,9 +146,69 @@ namespace trhvmgr
                 return ctx;
             }));
             backgroundWorker.ShowDialog();
+
+            for (int i = 0; i < virtualMachines.Count; i++)
+                if (virtualMachines[i].Name == suggestedVmName)
+                    tmplComboBox.SelectedIndex = i;
         }
 
-        private void AddTemplateDialog_FormClosing(object sender, FormClosingEventArgs e)
+        private void button2_Click(object sender, EventArgs e)
+        {
+            bool isFormValid = false;
+            // Disgusting
+            if (serverComboBox.SelectedIndex == -1) serverComboBox.IsValid = tribool.FALSE; else serverComboBox.IsValid = tribool.TRUE;
+            if (tmplComboBox.SelectedIndex == -1) tmplComboBox.IsValid = tribool.FALSE; else tmplComboBox.IsValid = tribool.TRUE;
+            if (configComboBox.SelectedIndex == -1) configComboBox.IsValid = tribool.FALSE; else configComboBox.IsValid = tribool.TRUE;
+            if (string.IsNullOrEmpty(vmTextbox.Text)) vmTextbox.IsValid = tribool.FALSE; else vmTextbox.IsValid = tribool.TRUE;
+
+            isFormValid = serverComboBox.IsValid == tribool.TRUE
+                && tmplComboBox.IsValid == tribool.TRUE
+                && vmTextbox.IsValid == tribool.TRUE
+                && configComboBox.IsValid == tribool.TRUE;
+
+            if (!isFormValid) this.DialogResult = DialogResult.None;
+            else
+            {
+                // !! IMPORTANT !!
+                // We NEED these exactly here because of cross thread errors
+                // (we cannot get the user inputs from the BackgroundWorker)
+                var a1 = GetSelectedHost().HostName;
+                var a2 = vmTextbox.Text;
+                var a3 = GetSelectedVirtualMachine().Uuid;
+                var a4 = GetSelectedSwitch().Name;
+                var a5 = configComboBox.SelectedIndex;
+
+                if (a1 == GetSelectedVirtualMachine().Host &&
+                    MessageBox.Show(
+                        "The selected target server is the same as the server hosting the template image. Do you want to continue?",
+                        "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                {
+                    this.DialogResult = DialogResult.None;
+                    return;
+                }
+
+                var backgroundWorker = new BackgroundWorkerQueueDialog("Loading servers...");
+                backgroundWorker.AppendTask("Creating VM...", DummyWorker.GetWorker((ctx) => {
+                    // Try to create the VM
+                    try
+                    {
+                        Interface.NewDeployment(a1, a2, a3, a4, jsonHelper.JObject["templates"][a5], PsStreamEventHandlers.GetUIHandlers(ctx));
+                        ctx.s = StatusCode.OK;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK);
+                        ctx.s = StatusCode.FAILED;
+                    }
+                    return ctx;
+                }));
+                backgroundWorker.ShowDialog();
+                if (backgroundWorker.GetWorker().ReturnedObjects[0].s == StatusCode.OK)
+                    this.DialogResult = DialogResult.OK;
+            }
+        }
+
+        private void DeployDialog_FormClosing(object sender, FormClosingEventArgs e)
         {
             jsonHelper.Dispose();
         }

@@ -97,7 +97,7 @@ namespace trhvmgr
                 try
                 {
                     _hn_cache = hostnameText.Text;
-                    vms = Interface.GetVms(hostnameText.Text);
+                    vms = HyperV.GetVm(hostnameText.Text);
                     vms?.ForEach(x =>
                     {
                         ThreadManager.Invoke(this, listBox1, () =>

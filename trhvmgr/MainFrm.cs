@@ -10,11 +10,13 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using trhvmgr.Database;
 using trhvmgr.Lib;
 using trhvmgr.Objects;
+using trhvmgr.Plugs;
 using trhvmgr.UI;
 
 namespace trhvmgr
@@ -34,13 +36,21 @@ namespace trhvmgr
             databaseManager = SessionManager.GetDatabase();
         }
 
-        #region Tree Code
+        #region Public and Private Methods
 
-        private void RefreshCollections()
+        internal void SetStatus(string status)
+        {
+            ThreadManager.Invoke(this, statusStrip, () => this.toolStripStatusLabel.Text = status);
+        }
+
+        private void RefreshCollections(WorkerContext ctx = null)
         {
             try
             {
-                databaseManager.FlushCache();
+                if(ctx == null)
+                    databaseManager.FlushCache();
+                else
+                    databaseManager.FlushCache(PsStreamEventHandlers.GetUIHandlers(ctx));
             }
             catch (Exception e)
             {
@@ -57,6 +67,125 @@ namespace trhvmgr
                 ThreadManager.Invoke(this, collectionsList, () => collectionsList.Items.Add(x)));
             treeListView.SetObjects(databaseManager.Directory.Values);
         }
+
+        private void RefreshBackground()
+        {
+            SetStatus("Busy.");
+            new BackgroundWorkerQueueDialog("Loading servers...", ProgressBarStyle.Marquee)
+                    .AppendTask("Connecting machines...", DummyWorker.GetWorker((ctx) => { RefreshCollections(ctx); return ctx; }))
+                    .ShowDialog();
+            SetStatus("Ready.");
+        }
+
+        private void ShowAddServerDialog()
+        {
+            new AddServerDialog().ShowDialog();
+            RefreshUI();
+        }
+
+        private void ShowAddTemplateDialog()
+        {
+            new AddTemplateDialog().ShowDialog();
+            RefreshBackground();
+        }
+
+        private void ShowAddBaseDialog()
+        {
+            new AddBaseDialog().ShowDialog();
+            RefreshUI();
+        }
+
+        private void ShowDeployDialog()
+        {
+            new DeployDialog((treeListView.SelectedObject as MasterTreeNode)?.Name).ShowDialog();
+            RefreshBackground();
+        }
+
+        private void ShowAppSettingsDialog()
+        {
+            if(new AppSettingsDialog().ShowDialog() != DialogResult.Cancel)
+                RefreshBackground();
+        }
+
+        private void ShowInspectDiskDialog()
+        {
+            var fileDialog = new BrowseVhdDialog();
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+                new InspectDiskDialog(fileDialog.ComputerName, fileDialog.FileName).ShowDialog();
+        }
+
+        private void StartVmms(string host)
+        {
+            SetStatus("Busy.");
+            new BackgroundWorkerQueueDialog("Starting service...")
+                .AppendTask("Starting vmms...", DummyWorker.GetWorker((ctx) =>
+                {
+                    Interface.StartService(host, "vmms", PsStreamEventHandlers.GetUIHandlers(ctx));
+                    return ctx;
+                })).ShowDialog();
+            Thread.Sleep(1000);
+            SetStatus("Ready.");
+        }
+
+        private void StopVmms(string host)
+        {
+            SetStatus("Busy.");
+            new BackgroundWorkerQueueDialog("Stopping service...")
+                .AppendTask("Stopping vmms...", DummyWorker.GetWorker((ctx) =>
+                {
+                    Interface.StopService(host, "vmms", PsStreamEventHandlers.GetUIHandlers(ctx));
+                    return ctx;
+                })).ShowDialog();
+            Thread.Sleep(1000);
+            SetStatus("Ready.");
+        }
+
+        private DialogResult GetAuthentication()
+        {
+            var dlg = new StartupDialog();
+            return dlg.ShowDialog();
+        }
+
+        private void SetBase(MasterTreeNode node)
+        {
+            if (node.Type != NodeType.VirtualMachines || node.VmType?.Value != VirtualMachineType.NONE)
+                return;
+            try
+            {
+                HyperV.CheckpointVm(node.Host, node.Name, "Base Checkpoint DNR");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Exception", MessageBoxButtons.OK);
+            }
+            databaseManager.SetVmType(DbVirtualMachine.FromTreeNode(node), VirtualMachineType.BASE);
+            RefreshUI();
+        }
+
+        private void UnsetBase(MasterTreeNode node)
+        {
+            if (node.Type != NodeType.VirtualMachines || node.VmType?.Value != VirtualMachineType.BASE)
+                return;
+            if (MessageBox.Show(
+                "This action may corrupt all existing templates of this base VM. Data loss may occur. Are you sure you want to continue?",
+                "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Hand) == DialogResult.No)
+                return;
+            try
+            {
+                HyperV.RestoreVmSnapshot(node.Host, node.Name, "Base Checkpoint DNR");
+                HyperV.RemoveVmSnapshot(node.Host, node.Name, "Base Checkpoint DNR");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Exception", MessageBoxButtons.OK);
+            }
+            databaseManager.SetVmType(DbVirtualMachine.FromTreeNode(node), VirtualMachineType.NONE);
+            RefreshUI();
+        }
+
+        #endregion
+
+        #region Tree Code
 
         private void SetupMasterTree()
         {
@@ -76,6 +205,10 @@ namespace trhvmgr
                     return imageList1.Images[1];
                 else if (((MasterTreeNode)x).Type == NodeType.VirtualMachines)
                     return imageList1.Images[2];
+                else if (((MasterTreeNode)x).Type == NodeType.VirtualHardDisks)
+                    return imageList1.Images[3];
+                else if (((MasterTreeNode)x).Type == NodeType.OrphanedVirtualHardDisks)
+                    return imageList1.Images[4];
                 return imageList1.Images[0];
             };
 
@@ -87,6 +220,10 @@ namespace trhvmgr
                     MasterTreeNode node = (MasterTreeNode) e.Model;
                     if (node.VmType?.Value == VirtualMachineType.BASE)
                         e.SubItem.Font = new Font(e.SubItem.Font, FontStyle.Bold);
+                    else if (node.VmType?.Value == VirtualMachineType.TEMPLATE)
+                        e.SubItem.Font = new Font(e.SubItem.Font, FontStyle.Italic);
+                    else if(node.VmType?.Value == VirtualMachineType.NONE)
+                        e.SubItem.ForeColor = Color.Gray;
                 }
             };
 
@@ -104,6 +241,10 @@ namespace trhvmgr
             this.treeListView.Refresh();
         }
 
+        #endregion
+
+        #region Menu Getters
+
         private ContextMenuStrip GetContextMenu(object model, OLVColumn col)
         {
             if(model is MasterTreeNode)
@@ -113,10 +254,13 @@ namespace trhvmgr
                 if (node.Type == NodeType.HostComputer)
                 {
                     menu.Items.Add("Delete").Click += (o, e) =>
-                        {
-                            databaseManager.RemoveServer(node.Name);
-                            RefreshUI();
-                        };
+                    {
+                        databaseManager.RemoveServer(node.Name);
+                        RefreshUI();
+                    };
+                    menu.Items.Add("Start vmms service").Click += (o, e) => StartVmms(node.Name);
+
+                    menu.Items.Add("Stop vmms service").Click += (o, e) => StopVmms(node.Name);
                     return menu;
                 }
                 else if(node.Type == NodeType.VirtualMachines)
@@ -125,20 +269,42 @@ namespace trhvmgr
                     {
                         var menuItem1 = menu.Items.Add("Unset as Base");
                         ((ToolStripMenuItem)menuItem1).Checked = true;
-                        menuItem1.Click += (o, e) =>
-                        {
-                            databaseManager.SetVmType(DbVirtualMachine.FromTreeNode(node), VirtualMachineType.NONE);
-                            RefreshUI();
-                        };
+                        menuItem1.Click += (o, e) => UnsetBase(node);
                     }
-                    else
+                    else if(node.VmType.Value == VirtualMachineType.NONE)
+                        menu.Items.Add("Set as Base").Click += (o, e) => SetBase(node);
+
+                    menu.Items.Add("Delete").Click += (o, e) =>
                     {
-                        menu.Items.Add("Set as Base").Click += (o, e) =>
-                        {
-                            databaseManager.SetVmType(DbVirtualMachine.FromTreeNode(node), VirtualMachineType.BASE);
-                            RefreshUI();
-                        };
-                    }
+                        if (MessageBox.Show("This action is irreversible. Do you want to continue?", "Delete Virtual Machine",
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Hand) == DialogResult.No)
+                            return;
+                        HyperV.RemoveVm(node.Host, node.Name);
+                        databaseManager.RemoveVm(Guid.Parse(node.Uuid));
+                        RefreshBackground();
+                    };
+
+                    menu.Items.Add("Copy UUID").Click += (o, e) => Clipboard.SetText(node.Uuid);
+
+                    return menu;
+                }
+                else if(node.Type == NodeType.OrphanedVirtualHardDisks)
+                {
+                    menu.Items.Add("Delete").Click += (o, e) =>
+                    {
+                        Interface.DeleteItem(node.Host, node.Name);
+                        RefreshBackground();
+                    };
+                    menu.Items.Add("Inspect...").Click += (o, e) =>
+                        new InspectDiskDialog(node.Host, node.Name).ShowDialog();
+                    menu.Items.Add("Copy Path").Click += (o, e) => Clipboard.SetText(node.Name);
+                    return menu;
+                }
+                else if(node.Type == NodeType.VirtualHardDisks)
+                {
+                    menu.Items.Add("Inspect...").Click += (o, e) =>
+                        new InspectDiskDialog(node.Host, node.Name).ShowDialog();
+                    menu.Items.Add("Copy Path").Click += (o, e) => Clipboard.SetText(node.Name);
                     return menu;
                 }
                 menu = null;
@@ -152,17 +318,50 @@ namespace trhvmgr
 
         private void MainFrm_Load(object sender, EventArgs e)
         {
-            // Get auth
-            var dlg = new StartupDialog();
-            dlg.ShowDialog();
-            if (dlg.DialogResult != DialogResult.OK)
+            if (GetAuthentication() != DialogResult.OK)
                 this.Close();
 
             // Initialize tree
             SetupMasterTree();
             var backgroundWorker = new BackgroundWorkerQueueDialog("Loading servers...", ProgressBarStyle.Marquee);
-            backgroundWorker.AppendTask("Connecting machines...", DummyWorker.GetWorker(RefreshCollections));
+            backgroundWorker.AppendTask("Connecting machines...", DummyWorker.GetWorker(() => RefreshCollections()));
             backgroundWorker.ShowDialog(FormStartPosition.CenterScreen);
+        }
+
+        private void treeListView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(treeListView.SelectedItem == null || treeListView.SelectedItem.RowObject == null || !(treeListView.SelectedItem.RowObject is MasterTreeNode))
+                return;
+            var obj = treeListView.SelectedItem.RowObject as MasterTreeNode;
+            if(obj.Type == NodeType.HostComputer)
+            {
+                startVmmsToolStripMenuItem.Enabled = true;
+                stopVmmsToolStripMenuItem.Enabled = true;
+            }
+            else
+            {
+                startVmmsToolStripMenuItem.Enabled = false;
+                stopVmmsToolStripMenuItem.Enabled = false;
+            }
+
+            if(obj.VmType?.Value == VirtualMachineType.TEMPLATE)
+                deployToolButton.Enabled = true;
+            else
+                deployToolButton.Enabled = false;
+
+            if(obj.Type == NodeType.VirtualMachines)
+            {
+                if (obj.State.vs == VirtualMachineState.Running)
+                {
+                    stopToolButton.Enabled = true;
+                    powerToolButton.Enabled = true;
+                    saveToolButton.Enabled = true;
+                }
+                else
+                {
+                    startToolButton.Enabled = true;
+                }
+            }
         }
 
         private void collectionsList_SelectedIndexChanged(object sender, EventArgs e)
@@ -214,36 +413,68 @@ namespace trhvmgr
 
         #endregion
 
-        #region UI Button Events
+        #region UI Toolstrip Button Events
 
-        private void addServerToolButton_Click(object sender, EventArgs e)
+        private void addServerToolButton_Click(object sender, EventArgs e) => ShowAddServerDialog();
+
+        private void addTemplateToolButton_Click(object sender, EventArgs e) => ShowAddTemplateDialog();
+
+        private void addBaseToolButton_Click(object sender, EventArgs e) => ShowAddBaseDialog();
+
+        private void toolBtnRefreshCol_Click(object sender, EventArgs e) => RefreshBackground();
+
+        private void deployToolButton_Click(object sender, EventArgs e) => ShowDeployDialog();
+
+        #endregion
+
+        #region UI Menu Button Events
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e) => ShowAppSettingsDialog();
+
+        private void inspectDiskToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AddServerDialog().ShowDialog();
-            RefreshUI();
+            var vhd = treeListView.SelectedObject as MasterTreeNode;
+            if (vhd.Type == NodeType.VirtualHardDisks || vhd.Type == NodeType.OrphanedVirtualHardDisks)
+                new InspectDiskDialog(vhd.Host, vhd.Name).ShowDialog();
+            else
+                ShowInspectDiskDialog();
         }
 
-        private void addTemplateToolButton_Click(object sender, EventArgs e)
+        private void startVmmsToolStripMenuItem_Click(object sender, EventArgs e) => StartVmms((treeListView.SelectedObject as MasterTreeNode)?.Name);
+
+        private void stopVmmsToolStripMenuItem_Click(object sender, EventArgs e) => StopVmms((treeListView.SelectedObject as MasterTreeNode)?.Name);
+
+        private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AddTemplateDialog().ShowDialog();
-            RefreshUI();
+            this.Hide();
+            GetAuthentication();
+            RefreshBackground();
         }
 
-        private void addVhdToolButton_Click(object sender, EventArgs e)
+        private void addServerToolStripMenuItem_Click(object sender, EventArgs e) => ShowAddServerDialog();
+
+        private void newTemplateToolStripMenuItem_Click(object sender, EventArgs e) => ShowAddTemplateDialog();
+
+        private void refreshListToolStripMenuItem_Click(object sender, EventArgs e) => RefreshBackground();
+
+        private void startToolButton_Click(object sender, EventArgs e)
         {
-            new AddVhdDialog().ShowDialog();
-            RefreshUI();
+
         }
 
-        private void toolBtnRefreshCol_Click(object sender, EventArgs e)
+        private void powerToolButton_Click(object sender, EventArgs e)
         {
-            var backgroundWorker = new BackgroundWorkerQueueDialog("Loading servers...", ProgressBarStyle.Marquee);
-            backgroundWorker.AppendTask("Connecting machines...", DummyWorker.GetWorker(RefreshCollections));
-            backgroundWorker.ShowDialog();
+
         }
 
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void stopToolButton_Click(object sender, EventArgs e)
         {
-            new AppSettingsDialog().ShowDialog();
+
+        }
+
+        private void saveToolButton_Click(object sender, EventArgs e)
+        {
+
         }
 
         #endregion

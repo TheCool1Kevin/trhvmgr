@@ -1,5 +1,7 @@
 ﻿{
+  "$schema": "templateschema.json",
   "templates": [
+
     // Parameters are given in the following order:
     // [0] - VM Name
     // [1] - VHD Name
@@ -35,6 +37,56 @@
           "params": {
             "VMName": "{0}",
             "StartupOrder": [ "LegacyNetworkAdapter", "IDE", "CD", "Floppy" ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Gen1VhdTemplate",
+      "actions": [
+        {
+          "ps": "New-VM",
+          "pipevmid": true,
+          "params": {
+            "Name": "{0}",
+            "BootDevice": "IDE",
+            "Generation": 1,
+            "VHDPath": "{1}",
+            "SwitchName": "{2}"
+          }
+        },
+        {
+          "ps": "Set-VM",
+          "getvm": true, // Pipes Get-VM from ID to command
+          "params": {
+            "DynamicMemory": null,
+            "CheckpointType": "Standard",
+            "AutomaticCheckpointsEnabled": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Gen2VhdTemplate",
+      "actions": [
+        {
+          "ps": "New-VM",
+          "pipevmid": true,
+          "params": {
+            "Name": "{0}",
+            "BootDevice": "VHD",
+            "Generation": 2,
+            "VHDPath": "{1}",
+            "SwitchName": "{2}"
+          }
+        },
+        {
+          "ps": "Set-VM",
+          "getvm": true, // Pipes Get-VM from ID to command
+          "params": {
+            "DynamicMemory": null,
+            "CheckpointType": "Standard",
+            "AutomaticCheckpointsEnabled": false
           }
         }
       ]

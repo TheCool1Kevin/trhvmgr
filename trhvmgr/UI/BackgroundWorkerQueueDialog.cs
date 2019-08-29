@@ -35,9 +35,10 @@ namespace trhvmgr.UI
         /// </summary>
         /// <param name="description">Description of task will be displayed beneath the progress bar.</param>
         /// <param name="f">The function should take in a WorkerContext and return a WorkerContext with a modified status code.</param>
-        public void AppendTask(string description, Func<WorkerContext, WorkerContext> f)
+        public BackgroundWorkerQueueDialog AppendTask(string description, Func<WorkerContext, WorkerContext> f)
         {
             queue.AppendTask(description, f);
+            return this;
         }
 
         /// <summary>

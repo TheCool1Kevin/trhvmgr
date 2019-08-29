@@ -117,17 +117,17 @@
     <Compile Include="AddTemplateDialog.Designer.cs">
       <DependentUpon>AddTemplateDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="AddVhdDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AddVhdDialog.Designer.cs">
-      <DependentUpon>AddVhdDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="AppSettingsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="AppSettingsDialog.Designer.cs">
       <DependentUpon>AppSettingsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BrowseVhdDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BrowseVhdDialog.Designer.cs">
+      <DependentUpon>BrowseVhdDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Database\DatabaseManager.cs" />
     <Compile Include="Database\DatabaseWorkerObject.cs" />
@@ -137,11 +137,18 @@
     <Compile Include="Database\LiteDataTable.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="DeployDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DeployDialog.Designer.cs">
+      <DependentUpon>DeployDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Lib\BackgroundWorkerQueue.cs" />
     <Compile Include="Lib\DummyWorker.cs" />
     <Compile Include="Lib\JsonHelper.cs" />
     <Compile Include="Lib\NetworkUtil.cs" />
     <Compile Include="Lib\NetworkWorkerObject.cs" />
+    <Compile Include="Lib\PsStreamEventHandlers.cs" />
     <Compile Include="Lib\PSWrapper.cs" />
     <Compile Include="Plugs\HyperV.cs" />
     <Compile Include="Plugs\NetAdapter.cs" />
@@ -155,11 +162,11 @@
     <Compile Include="MainFrm.Designer.cs">
       <DependentUpon>MainFrm.cs</DependentUpon>
     </Compile>
-    <Compile Include="NewVmDialog.cs">
+    <Compile Include="AddBaseDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NewVmDialog.Designer.cs">
-      <DependentUpon>NewVmDialog.cs</DependentUpon>
+    <Compile Include="AddBaseDialog.Designer.cs">
+      <DependentUpon>AddBaseDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Objects\HostComputer.cs" />
     <Compile Include="Objects\MasterTreeNode.cs" />
@@ -213,14 +220,37 @@
     <AdditionalFiles Include="Third-Party\PsExec64.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AdditionalFiles>
+    <Compile Include="InspectDiskDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InspectDiskDialog.Designer.cs">
+      <DependentUpon>InspectDiskDialog.cs</DependentUpon>
+    </Compile>
+    <None Include="Resources\magnifier.png" />
+    <None Include="Resources\disk-return.png" />
+    <None Include="Icons\control-power.png" />
+    <None Include="Icons\arrow-circle.png" />
+    <None Include="Icons\control-stop-square.png" />
+    <None Include="Icons\control.png" />
+    <None Include="Icons\page_refresh.png" />
+    <None Include="Icons\application-export.png" />
+    <None Include="Icons\computer--plus.png" />
+    <None Include="Icons\application--plus.png" />
+    <None Include="Icons\blueprint--plus.png" />
+    <EmbeddedResource Include="AddBaseDialog.resx">
+      <DependentUpon>AddBaseDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AddServerDialog.resx">
       <DependentUpon>AddServerDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AddTemplateDialog.resx">
       <DependentUpon>AddTemplateDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AddVhdDialog.resx">
-      <DependentUpon>AddVhdDialog.cs</DependentUpon>
+    <EmbeddedResource Include="BrowseVhdDialog.resx">
+      <DependentUpon>BrowseVhdDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DeployDialog.resx">
+      <DependentUpon>DeployDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainFrm.resx">
       <DependentUpon>MainFrm.cs</DependentUpon>
@@ -253,14 +283,17 @@
     <EmbeddedResource Include="UI\ValidatingTextbox.resx">
       <DependentUpon>ValidatingTextbox.cs</DependentUpon>
     </EmbeddedResource>
-    <Content Include="Config\db.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Config\templates.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="InspectDiskDialog.resx">
+      <DependentUpon>InspectDiskDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="Config\commands.json" />
+    <Content Include="Config\templateschema.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -293,7 +326,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties Config_4commands_1json__JSONSchema="http://json-schema.org/draft-04/schema" Config_4templates_1json__JSONSchema="http://json-schema.org/draft-04/schema" />
+      <UserProperties Config_4templates_1json__JSONSchema="" Config_4commands_1json__JSONSchema="http://json-schema.org/draft-04/schema" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

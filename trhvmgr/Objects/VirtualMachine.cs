@@ -1,7 +1,9 @@
 ﻿using LiteDB;
 using System;
 using System.Linq;
+using System.Management.Automation;
 using trhvmgr.Database;
+using trhvmgr.Lib;
 
 namespace trhvmgr.Objects
 {
@@ -54,7 +56,7 @@ namespace trhvmgr.Objects
             Name = node.Name,
             Uuid = Guid.Parse(node.Uuid),
             Type = node.VmType == null ? VirtualMachineType.NONE : node.VmType.Value,
-            VhdPath = node.Children.Select(x => x.Name).ToArray(),
+            VhdPath = node.Children.Where(x => x.Type == NodeType.VirtualHardDisks).Select(x => x.Name).ToArray(),
             ParentHost = node.ParentHost,
             ParentUuid = node.ParentUuid
         };
@@ -69,6 +71,25 @@ namespace trhvmgr.Objects
                 case "paused": return VirtualMachineState.Paused;
                 default: return VirtualMachineState.Other;
             }
+        }
+
+        public static VirtualMachine FromPSObject(PSObject m, string hostName)
+        {
+            return new VirtualMachine
+            {
+                Host = hostName,
+                Name = m.Members["VMName"].Value.ToString(),
+                Uuid = (Guid)m.Members["VMId"].Value,
+                State = VirtualMachine.GetStateFromString(m.Members["State"].Value.ToString()),
+                VhdPath = Array.ConvertAll(PSWrapper.Execute(hostName, (ps) =>
+                {
+                    return ps.AddCommand("Get-VM")
+                        .AddParameter("Id", m.Members["VMId"].Value)
+                        .AddCommand("Get-VMHardDiskDrive")
+                        .Invoke();
+                }).ToArray(), (x) => { return x.Members["Path"].Value.ToString(); }),
+                Type = VirtualMachineType.NONE
+            };
         }
     }
 

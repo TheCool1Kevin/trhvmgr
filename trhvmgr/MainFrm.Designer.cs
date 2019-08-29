@@ -79,31 +79,41 @@ namespace trhvmgr
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainFrm));
             this.mainToolstrip = new System.Windows.Forms.ToolStrip();
             this.addServerToolButton = new System.Windows.Forms.ToolStripButton();
-            this.addVhdToolButton = new System.Windows.Forms.ToolStripButton();
+            this.addBaseToolButton = new System.Windows.Forms.ToolStripButton();
             this.addTemplateToolButton = new System.Windows.Forms.ToolStripButton();
+            this.deployToolButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
+            this.powerToolButton = new System.Windows.Forms.ToolStripButton();
+            this.startToolButton = new System.Windows.Forms.ToolStripButton();
+            this.stopToolButton = new System.Windows.Forms.ToolStripButton();
+            this.saveToolButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolBtnRefreshCol = new System.Windows.Forms.ToolStripButton();
             this.mainMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.inspectDiskToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newTemplateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.refreshListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.startVmmsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stopVmmsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.treeListView = new BrightIdeasSoftware.TreeListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripSpringLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -134,12 +144,14 @@ namespace trhvmgr
             this.mainToolstrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.mainToolstrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addServerToolButton,
-            this.addVhdToolButton,
+            this.addBaseToolButton,
             this.addTemplateToolButton,
+            this.deployToolButton,
             this.toolStripSeparator1,
-            this.toolStripButton1,
-            this.toolStripButton2,
-            this.toolStripButton4,
+            this.powerToolButton,
+            this.startToolButton,
+            this.stopToolButton,
+            this.saveToolButton,
             this.toolStripSeparator2,
             this.toolBtnRefreshCol});
             this.mainToolstrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
@@ -153,7 +165,7 @@ namespace trhvmgr
             // addServerToolButton
             // 
             this.addServerToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.addServerToolButton.Image = ((System.Drawing.Image)(resources.GetObject("addServerToolButton.Image")));
+            this.addServerToolButton.Image = global::trhvmgr.Properties.Resources.computer__plus;
             this.addServerToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.addServerToolButton.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.addServerToolButton.Name = "addServerToolButton";
@@ -162,22 +174,22 @@ namespace trhvmgr
             this.addServerToolButton.Text = "Add New Server";
             this.addServerToolButton.Click += new System.EventHandler(this.addServerToolButton_Click);
             // 
-            // addVhdToolButton
+            // addBaseToolButton
             // 
-            this.addVhdToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.addVhdToolButton.Image = ((System.Drawing.Image)(resources.GetObject("addVhdToolButton.Image")));
-            this.addVhdToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.addVhdToolButton.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.addVhdToolButton.Name = "addVhdToolButton";
-            this.addVhdToolButton.Padding = new System.Windows.Forms.Padding(5, 2, 0, 0);
-            this.addVhdToolButton.Size = new System.Drawing.Size(25, 25);
-            this.addVhdToolButton.Text = "Import VHD";
-            this.addVhdToolButton.Click += new System.EventHandler(this.addVhdToolButton_Click);
+            this.addBaseToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.addBaseToolButton.Image = global::trhvmgr.Properties.Resources.application__plus;
+            this.addBaseToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.addBaseToolButton.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.addBaseToolButton.Name = "addBaseToolButton";
+            this.addBaseToolButton.Padding = new System.Windows.Forms.Padding(5, 2, 0, 0);
+            this.addBaseToolButton.Size = new System.Drawing.Size(25, 25);
+            this.addBaseToolButton.Text = "Create Base VM";
+            this.addBaseToolButton.Click += new System.EventHandler(this.addBaseToolButton_Click);
             // 
             // addTemplateToolButton
             // 
             this.addTemplateToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.addTemplateToolButton.Image = ((System.Drawing.Image)(resources.GetObject("addTemplateToolButton.Image")));
+            this.addTemplateToolButton.Image = global::trhvmgr.Properties.Resources.blueprint__plus;
             this.addTemplateToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.addTemplateToolButton.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.addTemplateToolButton.Name = "addTemplateToolButton";
@@ -186,37 +198,65 @@ namespace trhvmgr
             this.addTemplateToolButton.Text = "New Template VM";
             this.addTemplateToolButton.Click += new System.EventHandler(this.addTemplateToolButton_Click);
             // 
+            // deployToolButton
+            // 
+            this.deployToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.deployToolButton.Enabled = false;
+            this.deployToolButton.Image = global::trhvmgr.Properties.Resources.application_export;
+            this.deployToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.deployToolButton.Name = "deployToolButton";
+            this.deployToolButton.Size = new System.Drawing.Size(23, 22);
+            this.deployToolButton.Text = "Deploy VM";
+            this.deployToolButton.Click += new System.EventHandler(this.deployToolButton_Click);
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
-            // toolStripButton1
+            // powerToolButton
             // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton1.Text = "toolStripButton1";
+            this.powerToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.powerToolButton.Enabled = false;
+            this.powerToolButton.Image = global::trhvmgr.Properties.Resources.control_power;
+            this.powerToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.powerToolButton.Name = "powerToolButton";
+            this.powerToolButton.Size = new System.Drawing.Size(23, 22);
+            this.powerToolButton.Text = "Shutdown Virtual Machine";
+            this.powerToolButton.Click += new System.EventHandler(this.powerToolButton_Click);
             // 
-            // toolStripButton2
+            // startToolButton
             // 
-            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton2.Text = "toolStripButton2";
+            this.startToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.startToolButton.Enabled = false;
+            this.startToolButton.Image = global::trhvmgr.Properties.Resources.control;
+            this.startToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.startToolButton.Name = "startToolButton";
+            this.startToolButton.Size = new System.Drawing.Size(23, 22);
+            this.startToolButton.Text = "Start Virtual Machine";
+            this.startToolButton.Click += new System.EventHandler(this.startToolButton_Click);
             // 
-            // toolStripButton4
+            // stopToolButton
             // 
-            this.toolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton4.Image")));
-            this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton4.Name = "toolStripButton4";
-            this.toolStripButton4.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton4.Text = "toolStripButton4";
+            this.stopToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.stopToolButton.Enabled = false;
+            this.stopToolButton.Image = global::trhvmgr.Properties.Resources.control_stop_square;
+            this.stopToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.stopToolButton.Name = "stopToolButton";
+            this.stopToolButton.Size = new System.Drawing.Size(23, 22);
+            this.stopToolButton.Text = "Stop Virtual Machine";
+            this.stopToolButton.Click += new System.EventHandler(this.stopToolButton_Click);
+            // 
+            // saveToolButton
+            // 
+            this.saveToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.saveToolButton.Enabled = false;
+            this.saveToolButton.Image = global::trhvmgr.Properties.Resources.disk_return;
+            this.saveToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.saveToolButton.Name = "saveToolButton";
+            this.saveToolButton.Size = new System.Drawing.Size(23, 22);
+            this.saveToolButton.Text = "Save Virtual Machine State";
+            this.saveToolButton.Click += new System.EventHandler(this.saveToolButton_Click);
             // 
             // toolStripSeparator2
             // 
@@ -225,7 +265,7 @@ namespace trhvmgr
             // 
             // toolBtnRefreshCol
             // 
-            this.toolBtnRefreshCol.Image = ((System.Drawing.Image)(resources.GetObject("toolBtnRefreshCol.Image")));
+            this.toolBtnRefreshCol.Image = global::trhvmgr.Properties.Resources.page_refresh;
             this.toolBtnRefreshCol.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolBtnRefreshCol.Name = "toolBtnRefreshCol";
             this.toolBtnRefreshCol.Padding = new System.Windows.Forms.Padding(5, 2, 0, 0);
@@ -249,15 +289,97 @@ namespace trhvmgr
             // 
             // fileToolStripMenuItem
             // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.inspectDiskToolStripMenuItem,
+            this.addServerToolStripMenuItem,
+            this.newTemplateToolStripMenuItem,
+            this.refreshListToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.logoutToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "&File";
             // 
+            // inspectDiskToolStripMenuItem
+            // 
+            this.inspectDiskToolStripMenuItem.Image = global::trhvmgr.Properties.Resources.magnifier;
+            this.inspectDiskToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.inspectDiskToolStripMenuItem.Name = "inspectDiskToolStripMenuItem";
+            this.inspectDiskToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.inspectDiskToolStripMenuItem.Text = "Inspect Disk";
+            this.inspectDiskToolStripMenuItem.Click += new System.EventHandler(this.inspectDiskToolStripMenuItem_Click);
+            // 
+            // addServerToolStripMenuItem
+            // 
+            this.addServerToolStripMenuItem.Image = global::trhvmgr.Properties.Resources.computer__plus;
+            this.addServerToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.addServerToolStripMenuItem.Name = "addServerToolStripMenuItem";
+            this.addServerToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.addServerToolStripMenuItem.Text = "Add Server";
+            this.addServerToolStripMenuItem.Click += new System.EventHandler(this.addServerToolStripMenuItem_Click);
+            // 
+            // newTemplateToolStripMenuItem
+            // 
+            this.newTemplateToolStripMenuItem.Image = global::trhvmgr.Properties.Resources.blueprint__plus;
+            this.newTemplateToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.newTemplateToolStripMenuItem.Name = "newTemplateToolStripMenuItem";
+            this.newTemplateToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.newTemplateToolStripMenuItem.Text = "New Template";
+            this.newTemplateToolStripMenuItem.Click += new System.EventHandler(this.newTemplateToolStripMenuItem_Click);
+            // 
+            // refreshListToolStripMenuItem
+            // 
+            this.refreshListToolStripMenuItem.Image = global::trhvmgr.Properties.Resources.page_refresh;
+            this.refreshListToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.refreshListToolStripMenuItem.Name = "refreshListToolStripMenuItem";
+            this.refreshListToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.refreshListToolStripMenuItem.Text = "Refresh List";
+            this.refreshListToolStripMenuItem.Click += new System.EventHandler(this.refreshListToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(147, 6);
+            // 
+            // logoutToolStripMenuItem
+            // 
+            this.logoutToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("logoutToolStripMenuItem.Image")));
+            this.logoutToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.logoutToolStripMenuItem.Text = "Logout";
+            this.logoutToolStripMenuItem.Click += new System.EventHandler(this.logoutToolStripMenuItem_Click);
+            // 
             // editToolStripMenuItem
             // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.startVmmsToolStripMenuItem,
+            this.stopVmmsToolStripMenuItem,
+            this.toolStripSeparator3});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
-            this.editToolStripMenuItem.Text = "&Edit";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+            this.editToolStripMenuItem.Text = "&Action";
+            // 
+            // startVmmsToolStripMenuItem
+            // 
+            this.startVmmsToolStripMenuItem.Enabled = false;
+            this.startVmmsToolStripMenuItem.Name = "startVmmsToolStripMenuItem";
+            this.startVmmsToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.startVmmsToolStripMenuItem.Text = "Start vmms service";
+            this.startVmmsToolStripMenuItem.Click += new System.EventHandler(this.startVmmsToolStripMenuItem_Click);
+            // 
+            // stopVmmsToolStripMenuItem
+            // 
+            this.stopVmmsToolStripMenuItem.Enabled = false;
+            this.stopVmmsToolStripMenuItem.Name = "stopVmmsToolStripMenuItem";
+            this.stopVmmsToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.stopVmmsToolStripMenuItem.Text = "Stop vmms service";
+            this.stopVmmsToolStripMenuItem.Click += new System.EventHandler(this.stopVmmsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(170, 6);
             // 
             // viewToolStripMenuItem
             // 
@@ -323,6 +445,7 @@ namespace trhvmgr
             this.treeListView.VirtualMode = true;
             this.treeListView.CellRightClick += new System.EventHandler<BrightIdeasSoftware.CellRightClickEventArgs>(this.treeListView_CellRightClick);
             this.treeListView.ItemActivate += new System.EventHandler(this.treeListView_ItemActivate);
+            this.treeListView.SelectedIndexChanged += new System.EventHandler(this.treeListView_SelectedIndexChanged);
             // 
             // olvColumn1
             // 
@@ -338,6 +461,14 @@ namespace trhvmgr
             this.olvColumn2.Text = "Host PC";
             this.olvColumn2.Width = 68;
             // 
+            // olvColumn3
+            // 
+            this.olvColumn3.AspectName = "Uuid";
+            this.olvColumn3.DisplayIndex = 4;
+            this.olvColumn3.FillsFreeSpace = true;
+            this.olvColumn3.Text = "UUID";
+            this.olvColumn3.Width = 100;
+            // 
             // olvColumn4
             // 
             this.olvColumn4.AspectName = "VmType";
@@ -351,29 +482,22 @@ namespace trhvmgr
             this.olvColumn5.DisplayIndex = 3;
             this.olvColumn5.Text = "State";
             // 
-            // olvColumn3
-            // 
-            this.olvColumn3.AspectName = "Uuid";
-            this.olvColumn3.DisplayIndex = 4;
-            this.olvColumn3.FillsFreeSpace = true;
-            this.olvColumn3.Text = "UUID";
-            this.olvColumn3.Width = 100;
-            // 
             // imageList1
             // 
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "help.png");
-            this.imageList1.Images.SetKeyName(1, "computer.png");
-            this.imageList1.Images.SetKeyName(2, "monitor_window.png");
+            this.imageList1.Images.SetKeyName(0, "question-white.png");
+            this.imageList1.Images.SetKeyName(1, "monitor-network.png");
+            this.imageList1.Images.SetKeyName(2, "applications-blue.png");
+            this.imageList1.Images.SetKeyName(3, "drive-medium.png");
+            this.imageList1.Images.SetKeyName(4, "drive--exclamation.png");
             // 
             // statusStrip
             // 
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel,
-            this.toolStripSpringLabel,
-            this.toolStripProgressBar});
+            this.toolStripSpringLabel});
             this.statusStrip.Location = new System.Drawing.Point(0, 422);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 10, 0);
@@ -390,14 +514,8 @@ namespace trhvmgr
             // toolStripSpringLabel
             // 
             this.toolStripSpringLabel.Name = "toolStripSpringLabel";
-            this.toolStripSpringLabel.Size = new System.Drawing.Size(549, 17);
+            this.toolStripSpringLabel.Size = new System.Drawing.Size(665, 17);
             this.toolStripSpringLabel.Spring = true;
-            // 
-            // toolStripProgressBar
-            // 
-            this.toolStripProgressBar.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
-            this.toolStripProgressBar.Name = "toolStripProgressBar";
-            this.toolStripProgressBar.Size = new System.Drawing.Size(112, 16);
             // 
             // tabControl
             // 
@@ -578,7 +696,6 @@ namespace trhvmgr
         private BrightIdeasSoftware.OLVColumn olvColumn3;
         private StatusStrip statusStrip;
         private ToolStripStatusLabel toolStripStatusLabel;
-        private ToolStripProgressBar toolStripProgressBar;
         private ToolStripStatusLabel toolStripSpringLabel;
         private TabControl tabControl;
         private TabPage tabPage1;
@@ -589,7 +706,7 @@ namespace trhvmgr
         private Label label2;
         private TextBox queryText;
         private ToolStripButton addServerToolButton;
-        private ToolStripButton addVhdToolButton;
+        private ToolStripButton addBaseToolButton;
         private ToolStripButton addTemplateToolButton;
         private Panel panel1;
         private ImageList imageList1;
@@ -597,11 +714,22 @@ namespace trhvmgr
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripButton toolBtnRefreshCol;
         private ToolStripSeparator toolStripSeparator1;
-        private ToolStripButton toolStripButton1;
-        private ToolStripButton toolStripButton2;
-        private ToolStripButton toolStripButton4;
+        private ToolStripButton startToolButton;
+        private ToolStripButton stopToolButton;
+        private ToolStripButton saveToolButton;
         private BrightIdeasSoftware.OLVColumn olvColumn4;
         private ToolStripMenuItem settingsToolStripMenuItem;
         private BrightIdeasSoftware.OLVColumn olvColumn5;
+        private ToolStripMenuItem stopVmmsToolStripMenuItem;
+        private ToolStripMenuItem inspectDiskToolStripMenuItem;
+        private ToolStripButton deployToolButton;
+        private ToolStripMenuItem startVmmsToolStripMenuItem;
+        private ToolStripMenuItem addServerToolStripMenuItem;
+        private ToolStripMenuItem newTemplateToolStripMenuItem;
+        private ToolStripMenuItem logoutToolStripMenuItem;
+        private ToolStripMenuItem refreshListToolStripMenuItem;
+        private ToolStripButton powerToolButton;
+        private ToolStripSeparator toolStripSeparator4;
+        private ToolStripSeparator toolStripSeparator3;
     }
 }

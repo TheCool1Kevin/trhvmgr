@@ -8,7 +8,8 @@ namespace trhvmgr.Objects
         Other = 0,
         HostComputer,
         VirtualMachines,
-        VirtualHardDisks
+        VirtualHardDisks,
+        OrphanedVirtualHardDisks
     };
 
     public class NodeState

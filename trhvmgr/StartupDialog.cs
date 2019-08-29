@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using trhvmgr.Properties;
 
 namespace trhvmgr
 {
@@ -20,7 +21,7 @@ namespace trhvmgr
         public StartupDialog()
         {
             InitializeComponent();
-            dbfileTxt.Text = ConfigurationManager.ConnectionStrings["ServerDB"].ConnectionString;
+            dbfileTxt.Text = Settings.Default.connectionString;
             serverTxt.Text = Dns.GetHostName();
         }
 
