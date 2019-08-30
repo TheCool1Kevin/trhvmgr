@@ -83,11 +83,14 @@ namespace trhvmgr
             this.addTemplateToolButton = new System.Windows.Forms.ToolStripButton();
             this.deployToolButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.powerToolButton = new System.Windows.Forms.ToolStripButton();
             this.startToolButton = new System.Windows.Forms.ToolStripButton();
+            this.suspendToolButton = new System.Windows.Forms.ToolStripButton();
             this.stopToolButton = new System.Windows.Forms.ToolStripButton();
+            this.powerToolButton = new System.Windows.Forms.ToolStripButton();
             this.saveToolButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.connectToolButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolBtnRefreshCol = new System.Windows.Forms.ToolStripButton();
             this.mainMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -148,11 +151,14 @@ namespace trhvmgr
             this.addTemplateToolButton,
             this.deployToolButton,
             this.toolStripSeparator1,
-            this.powerToolButton,
             this.startToolButton,
+            this.suspendToolButton,
             this.stopToolButton,
+            this.powerToolButton,
             this.saveToolButton,
             this.toolStripSeparator2,
+            this.connectToolButton,
+            this.toolStripSeparator5,
             this.toolBtnRefreshCol});
             this.mainToolstrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.mainToolstrip.Location = new System.Drawing.Point(0, 24);
@@ -214,17 +220,6 @@ namespace trhvmgr
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
-            // powerToolButton
-            // 
-            this.powerToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.powerToolButton.Enabled = false;
-            this.powerToolButton.Image = global::trhvmgr.Properties.Resources.control_power;
-            this.powerToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.powerToolButton.Name = "powerToolButton";
-            this.powerToolButton.Size = new System.Drawing.Size(23, 22);
-            this.powerToolButton.Text = "Shutdown Virtual Machine";
-            this.powerToolButton.Click += new System.EventHandler(this.powerToolButton_Click);
-            // 
             // startToolButton
             // 
             this.startToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -236,6 +231,17 @@ namespace trhvmgr
             this.startToolButton.Text = "Start Virtual Machine";
             this.startToolButton.Click += new System.EventHandler(this.startToolButton_Click);
             // 
+            // suspendToolButton
+            // 
+            this.suspendToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.suspendToolButton.Enabled = false;
+            this.suspendToolButton.Image = global::trhvmgr.Properties.Resources.control_pause;
+            this.suspendToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.suspendToolButton.Name = "suspendToolButton";
+            this.suspendToolButton.Size = new System.Drawing.Size(23, 22);
+            this.suspendToolButton.Text = "Suspend Virtual Machine";
+            this.suspendToolButton.Click += new System.EventHandler(this.suspendToolButton_Click);
+            // 
             // stopToolButton
             // 
             this.stopToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -246,6 +252,17 @@ namespace trhvmgr
             this.stopToolButton.Size = new System.Drawing.Size(23, 22);
             this.stopToolButton.Text = "Stop Virtual Machine";
             this.stopToolButton.Click += new System.EventHandler(this.stopToolButton_Click);
+            // 
+            // powerToolButton
+            // 
+            this.powerToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.powerToolButton.Enabled = false;
+            this.powerToolButton.Image = global::trhvmgr.Properties.Resources.control_power;
+            this.powerToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.powerToolButton.Name = "powerToolButton";
+            this.powerToolButton.Size = new System.Drawing.Size(23, 22);
+            this.powerToolButton.Text = "Shutdown Virtual Machine";
+            this.powerToolButton.Click += new System.EventHandler(this.powerToolButton_Click);
             // 
             // saveToolButton
             // 
@@ -262,6 +279,22 @@ namespace trhvmgr
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // connectToolButton
+            // 
+            this.connectToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.connectToolButton.Enabled = false;
+            this.connectToolButton.Image = ((System.Drawing.Image)(resources.GetObject("connectToolButton.Image")));
+            this.connectToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.connectToolButton.Name = "connectToolButton";
+            this.connectToolButton.Size = new System.Drawing.Size(23, 22);
+            this.connectToolButton.Text = "Connect to Virtual Machine";
+            this.connectToolButton.Click += new System.EventHandler(this.connectToolButton_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
             // 
             // toolBtnRefreshCol
             // 
@@ -731,5 +764,8 @@ namespace trhvmgr
         private ToolStripButton powerToolButton;
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripSeparator toolStripSeparator3;
+        private ToolStripButton suspendToolButton;
+        private ToolStripButton connectToolButton;
+        private ToolStripSeparator toolStripSeparator5;
     }
 }

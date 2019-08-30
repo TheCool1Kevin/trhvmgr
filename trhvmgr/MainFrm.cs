@@ -5,9 +5,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -47,14 +49,18 @@ namespace trhvmgr
         {
             try
             {
-                if(ctx == null)
+                if (ctx == null)
                     databaseManager.FlushCache();
                 else
+                {
                     databaseManager.FlushCache(PsStreamEventHandlers.GetUIHandlers(ctx));
+                    ctx.s = StatusCode.OK;
+                }
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message, "Exception", MessageBoxButtons.OK);
+                if(ctx != null) ctx.s = StatusCode.FAILED;
                 return;
             }
             RefreshUI();
@@ -72,7 +78,7 @@ namespace trhvmgr
         {
             SetStatus("Busy.");
             new BackgroundWorkerQueueDialog("Loading servers...", ProgressBarStyle.Marquee)
-                    .AppendTask("Connecting machines...", DummyWorker.GetWorker((ctx) => { RefreshCollections(ctx); return ctx; }))
+                    .AppendTask("Connecting machines...", DummyWorker.GetWorker((ctx) => RefreshCollections(ctx)))
                     .ShowDialog();
             SetStatus("Ready.");
         }
@@ -114,15 +120,19 @@ namespace trhvmgr
                 new InspectDiskDialog(fileDialog.ComputerName, fileDialog.FileName).ShowDialog();
         }
 
+        private void ShowServerPropertyDialog()
+        {
+            new ServerProperties((treeListView.SelectedObject as MasterTreeNode)?.Name).ShowDialog();
+            RefreshBackground();
+        }
+
         private void StartVmms(string host)
         {
             SetStatus("Busy.");
             new BackgroundWorkerQueueDialog("Starting service...")
                 .AppendTask("Starting vmms...", DummyWorker.GetWorker((ctx) =>
-                {
-                    Interface.StartService(host, "vmms", PsStreamEventHandlers.GetUIHandlers(ctx));
-                    return ctx;
-                })).ShowDialog();
+                    Interface.StartService(host, "vmms", PsStreamEventHandlers.GetUIHandlers(ctx))
+                )).ShowDialog();
             Thread.Sleep(1000);
             SetStatus("Ready.");
         }
@@ -132,10 +142,8 @@ namespace trhvmgr
             SetStatus("Busy.");
             new BackgroundWorkerQueueDialog("Stopping service...")
                 .AppendTask("Stopping vmms...", DummyWorker.GetWorker((ctx) =>
-                {
-                    Interface.StopService(host, "vmms", PsStreamEventHandlers.GetUIHandlers(ctx));
-                    return ctx;
-                })).ShowDialog();
+                    Interface.StopService(host, "vmms", PsStreamEventHandlers.GetUIHandlers(ctx))
+                )).ShowDialog();
             Thread.Sleep(1000);
             SetStatus("Ready.");
         }
@@ -259,8 +267,8 @@ namespace trhvmgr
                         RefreshUI();
                     };
                     menu.Items.Add("Start vmms service").Click += (o, e) => StartVmms(node.Name);
-
                     menu.Items.Add("Stop vmms service").Click += (o, e) => StopVmms(node.Name);
+                    menu.Items.Add("Properties").Click += (o, e) => ShowServerPropertyDialog();
                     return menu;
                 }
                 else if(node.Type == NodeType.VirtualMachines)
@@ -353,14 +361,25 @@ namespace trhvmgr
             {
                 if (obj.State.vs == VirtualMachineState.Running)
                 {
-                    stopToolButton.Enabled = true;
-                    powerToolButton.Enabled = true;
-                    saveToolButton.Enabled = true;
+                    stopToolButton.Enabled = true; powerToolButton.Enabled = true;
+                    saveToolButton.Enabled = true; startToolButton.Enabled = false;
+                    suspendToolButton.Enabled = true;
                 }
                 else
                 {
-                    startToolButton.Enabled = true;
+                    stopToolButton.Enabled = false; powerToolButton.Enabled = false;
+                    saveToolButton.Enabled = false; startToolButton.Enabled = true;
+                    suspendToolButton.Enabled = false;
                 }
+                connectToolButton.Enabled = true;
+            }
+            else
+            {
+                stopToolButton.Enabled = false; powerToolButton.Enabled = false;
+                saveToolButton.Enabled = false; startToolButton.Enabled = false;
+                suspendToolButton.Enabled = false;
+
+                connectToolButton.Enabled = false;
             }
         }
 
@@ -459,22 +478,71 @@ namespace trhvmgr
 
         private void startToolButton_Click(object sender, EventArgs e)
         {
-
+            var node = treeListView.SelectedObject as MasterTreeNode;
+            if (node == null) return;
+            BackgroundWorkerQueueDialog bg = new BackgroundWorkerQueueDialog("Setting machine state...");
+            if (node.State?.vs == VirtualMachineState.Paused)
+                bg.AppendTask("", DummyWorker.GetWorker((ctx) => HyperV.ResumeVm(node.Host, node.Name, PsStreamEventHandlers.GetUIHandlers(ctx))));
+            else
+                bg.AppendTask("", DummyWorker.GetWorker((ctx) => HyperV.StartVm(node.Host, node.Name, PsStreamEventHandlers.GetUIHandlers(ctx))));
+            bg.ShowDialog();
+            RefreshBackground();
         }
 
         private void powerToolButton_Click(object sender, EventArgs e)
         {
-
+            var node = treeListView.SelectedObject as MasterTreeNode;
+            if (node == null) return;
+            new BackgroundWorkerQueueDialog("Setting machine state...")
+                .AppendTask("", DummyWorker.GetWorker((ctx) =>
+                    HyperV.StopVm(node.Host, node.Name, false, PsStreamEventHandlers.GetUIHandlers(ctx))
+                )).ShowDialog();
+            RefreshBackground();
         }
 
         private void stopToolButton_Click(object sender, EventArgs e)
         {
-
+            var node = treeListView.SelectedObject as MasterTreeNode;
+            if (node == null) return;
+            new BackgroundWorkerQueueDialog("Setting machine state...")
+                .AppendTask("", DummyWorker.GetWorker((ctx) =>
+                    HyperV.StopVm(node.Host, node.Name, true, PsStreamEventHandlers.GetUIHandlers(ctx))
+                )).ShowDialog();
+            RefreshBackground();
         }
 
         private void saveToolButton_Click(object sender, EventArgs e)
         {
+            var node = treeListView.SelectedObject as MasterTreeNode;
+            if (node == null) return;
+            new BackgroundWorkerQueueDialog("Setting machine state...")
+                .AppendTask("", DummyWorker.GetWorker((ctx) =>
+                    HyperV.SaveVm(node.Host, node.Name, PsStreamEventHandlers.GetUIHandlers(ctx))
+                )).ShowDialog();
+            RefreshBackground();
+        }
 
+        private void suspendToolButton_Click(object sender, EventArgs e)
+        {
+            var node = treeListView.SelectedObject as MasterTreeNode;
+            if (node == null) return;
+            new BackgroundWorkerQueueDialog("Setting machine state...")
+                .AppendTask("", DummyWorker.GetWorker((ctx) =>
+                    HyperV.SuspendVm(node.Host, node.Name, PsStreamEventHandlers.GetUIHandlers(ctx))
+                )).ShowDialog();
+            RefreshBackground();
+        }
+
+        private void connectToolButton_Click(object sender, EventArgs e)
+        {
+            var node = treeListView.SelectedObject as MasterTreeNode;
+            if (node == null || node.Type != NodeType.VirtualMachines) return;
+            string path = Path.Combine(".\\Third-Party", "vmconnect.exe");
+            Process vmConnection = new Process();
+            vmConnection.StartInfo.FileName = path;
+            vmConnection.StartInfo.Arguments = $"\"{node.Host}\" \"{node.Name}\"";
+            //vmConnection.StartInfo.Verb = "runas";
+            vmConnection.Start();
         }
 
         #endregion

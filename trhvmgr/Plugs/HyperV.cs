@@ -76,6 +76,15 @@ namespace trhvmgr.Plugs
             return res.ToList();
         }
 
+        // Alias: Get-VMHost
+        public static PSObject GetVmHost(string ComputerName, PsStreamEventHandlers handlers = null)
+        {
+            Collection<PSObject> res;
+            PSWrapper.Execute(ComputerName, $"Get-VMHost -ComputerName \"{ComputerName}\"", out res, handlers);
+            if (res == null || res.Count <= 0) return null;
+            return res[0];
+        }
+
         #endregion
 
         #region New
@@ -153,7 +162,7 @@ namespace trhvmgr.Plugs
         public static void StartVm(string ComputerName, string Name, PsStreamEventHandlers handlers = null)
         {
             Collection<PSObject> res;
-            PSWrapper.Execute(ComputerName, $"Start-VM -Name \"{Name}\" -Force", out res, handlers);
+            PSWrapper.Execute(ComputerName, $"Start-VM -Name \"{Name}\"", out res, handlers);
         }
 
         // Alias: Stop-VM
@@ -161,7 +170,28 @@ namespace trhvmgr.Plugs
         {
             Collection<PSObject> res;
             string Flag = PowerOff ? "-PowerOff" : "";
-            PSWrapper.Execute(ComputerName, $"Stop-VM -Name \"{Name}\" ${Flag} -Force", out res, handlers);
+            PSWrapper.Execute(ComputerName, $"Stop-VM -Name \"{Name}\" {Flag} -Force", out res, handlers);
+        }
+
+        // Alias: Resume-VM
+        public static void ResumeVm(string ComputerName, string Name, PsStreamEventHandlers handlers = null)
+        {
+            Collection<PSObject> res;
+            PSWrapper.Execute(ComputerName, $"Resume-VM -Name \"{Name}\"", out res, handlers);
+        }
+
+        // Alias: Suspend-VM
+        public static void SuspendVm(string ComputerName, string Name, PsStreamEventHandlers handlers = null)
+        {
+            Collection<PSObject> res;
+            PSWrapper.Execute(ComputerName, $"Suspend-VM -Name \"{Name}\"", out res, handlers);
+        }
+
+        // Alias: Save-VM
+        public static void SaveVm(string ComputerName, string Name, PsStreamEventHandlers handlers = null)
+        {
+            Collection<PSObject> res;
+            PSWrapper.Execute(ComputerName, $"Save-VM -Name \"{Name}\"", out res, handlers);
         }
 
         #endregion

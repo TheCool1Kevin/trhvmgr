@@ -120,10 +120,26 @@
   <metadata name="mainToolstrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>152, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="connectToolButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJFSURBVDhPrZHtS1NhGMaf7/4B+wuKFquNGs7k1BqL2Wrm
+        oDmN+pzlWokxBHvbWqNmZJpFL7JWimYwKcM0X3KJ0822HXY29hoOBu6L/8TVcx/8sEqQohsuDlz387vu
+        534Os9vtza2trRf/RcQym83WsbW1hWq1+lcihlhmtVovbW5uQuMYxoGucex3vOYKQuV8i4PXRqDtmUTD
+        zU9ovPMZx+5+gcG3gGb/LIghllksls5KpQIVh88+jWFqdhHT82HMhSNYiqzLXtuw9ItOPloBMcQys9ns
+        KJfL2HdlBKcehnnAAvx+P9xuNzweD8z+Re4voXlgFWeexGSZeQAxxDKTyeQslUrYczkIg3cGQ+MzcHn6
+        EF6OYGUthvW4CFHK4LDrPRrcMzjKV2jiAcQQy4xG49V8Po+9nW/kHRtvTeFQ9xiWllfQ398Pr9cLn88H
+        wTMNwwMOD8XQ8kIEMcQyvV7flclkoHSO4gh/qHr+YPU3PiDw8au8QiqVQi6XkydubGzAGkihfbQIYohl
+        giB00yFV9wSEe/M43vcNJx6vwjS4hqbByB8BbWNFXJgoyz6xTKfTXU8mkzDcnoTgnYOBB5gG1nD6WRwt
+        L5OwPv8O2ysR9oCE9mAa58d+oONdDsQQy7RarSuRSCAej0MURaTTaWSzWRQKBRSLRXkyfekWdG2aTDCJ
+        WKbRaM6p1eqe3xUMBlGrnc4Qy3YqpVLZGwqFUCvyttu7l0Kh8ESjUUiSJK9DK5K33d696urq7vN/PF4r
+        8rbb/7MY+wlESAmuRrRieQAAAABJRU5ErkJggg==
+</value>
+  </data>
   <metadata name="mainMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="logoutToolStripMenuItem.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
@@ -148,7 +164,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAAS
-        DAAAAk1TRnQBSQFMAgEBBQEAATgBAgE4AQIBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
+        DAAAAk1TRnQBSQFMAgEBBQEAAWgBAgFoAQIBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
         AwABQAMAASADAAEBAQABCAYAAQgYAAGAAgABgAMAAoABAAGAAwABgAEAAYABAAKAAgADwAEAAcAB3AHA
         AQAB8AHKAaYBAAEzBQABMwEAATMBAAEzAQACMwIAAxYBAAMcAQADIgEAAykBAANVAQADTQEAA0IBAAM5
         AQABgAF8Af8BAAJQAf8BAAGTAQAB1gEAAf8B7AHMAQABxgHWAe8BAAHWAucBAAGQAakBrQIAAf8BMwMA

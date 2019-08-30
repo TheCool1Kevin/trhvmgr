@@ -156,7 +156,7 @@ namespace trhvmgr.Interactive
             string server = Dns.GetHostName();
             if (tokens.Length == 2) server = tokens[1];
             Console.WriteLine("Waking up...");
-            Interface.BringOnline(server, PsStreamEventHandlers.DefaultHandlers);
+            Interface.BringOnline(server);
             Console.WriteLine("Restarting vmms...");
             Interface.RestartService(server, PsStreamEventHandlers.DefaultHandlers);
         }

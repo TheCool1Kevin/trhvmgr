@@ -226,6 +226,10 @@
     <Compile Include="InspectDiskDialog.Designer.cs">
       <DependentUpon>InspectDiskDialog.cs</DependentUpon>
     </Compile>
+    <Content Include="Third-Party\vmconnect.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\control-pause.png" />
     <None Include="Resources\magnifier.png" />
     <None Include="Resources\disk-return.png" />
     <None Include="Icons\control-power.png" />
@@ -326,7 +330,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties Config_4templates_1json__JSONSchema="" Config_4commands_1json__JSONSchema="http://json-schema.org/draft-04/schema" />
+      <UserProperties Config_4commands_1json__JSONSchema="http://json-schema.org/draft-04/schema" Config_4templates_1json__JSONSchema="" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
